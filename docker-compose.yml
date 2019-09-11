@@ -1,0 +1,13 @@
+version: "3"
+services:
+  flask:
+    container_name: flask_chatbot
+    build:
+      context: ./chatbot
+    ports:
+      - 9000:5000
+    volumes:
+      - ./:/flask_chatbot
+    environment:
+      - FLASK_APP=chatbot
+      - FLASK_ENV=development
