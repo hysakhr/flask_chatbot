@@ -1,0 +1,31 @@
+{
+  "talk": [
+    {
+      "who": "bot",
+      "staticAnswerId": 1,
+      "answer": "こんにちは！<br>困ったことがあれば入力欄から送信してね",
+      "questionList": [
+        {
+          "qa_id": 2222,
+          "question": "〇〇はありますか？"
+        },
+        {
+          "qa_id": 2223,
+          "question": "ログインできません"
+        }
+      ],
+      "staticAnswerList": [
+        {
+          "id": 1,
+          "title": "start",
+          "displayText": "最初の回答"
+        }
+      ]
+    },
+    {
+      "who": "user",
+      "displayText": "ユーザーの発言",
+      "type": "freeText"
+    }
+  ]
+}

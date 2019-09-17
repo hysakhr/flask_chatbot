@@ -1,0 +1,25 @@
+{
+  "components": {
+    "answer": {
+      "qa_id": 1234,
+      "answer": "回答文"
+    },
+    "questionList": [
+      {
+        "qa_id": 2222,
+        "question": "〇〇はありませんか？"
+      },
+      {
+        "qa_id": 2223,
+        "question": "ログインできません"
+      }
+    ],
+    "staticAnswerList": [
+      {
+        "id": 1,
+        "title": "start",
+        "displayText": "最初の回答"
+      }
+    ]
+  }
+}

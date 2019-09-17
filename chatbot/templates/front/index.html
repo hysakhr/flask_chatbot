@@ -4,24 +4,232 @@
 <head>
   <meta charset="utf-8">
   <title>top page flask-chatbot</title>
+  <script src="https://cdn.jsdelivr.net/npm/vue@2.6.0"></script>
+  <script src="https://cdn.jsdelivr.net/npm/axios@0.19.0/dist/axios.min.js"></script>
 </head>
 
 <body>
   <div id="contents">
 
-    <div class="cb-area">
-      <div class="cb-talk">
-        <p class="cb-talk-bot">botの発言</p>
-        <p class="cb-talk-user">ユーザーの発言</p>
-      </div>
-
-      <div class="cb-control">
-        <input type="text" class="cb-input" />
-        <button type="submit" class="cb-send-button">send</button>
-      </div>
-
+    <div id="cb-area">
+      <cb-talk v-bind:talk="talk" v-bind:send-question="sendQuestion" v-bind:send-static-answer="sendStaticAnswer">
+      </cb-talk>
+      <cb-control v-bind:send-free-text="sendFreeText"></cb-control>
     </div>
+
   </div>
 </body>
 
 </html>
+
+
+<!-- component talk area -->
+<script type="text/x-template" id="cb-talk">
+  <div class="cb-talk">
+
+    <div v-for="item in talk" :key="item" class="cb-remark">
+      <!-- bot remark -->
+      <div class="cb-talk-bot" v-if="item.who == 'bot'">
+
+        <!-- answer -->
+        <p v-if="item.answer" class="cb-bot-answer">[[item.answer]]</p>
+
+        <!-- questionList -->
+        <ul v-if="item.questionList" class="cb-bot-question-list">
+          <li v-for="q in item.questionList" class="cb-bot-question" v-on:click="clickQuestion(q)">
+            [[q.question]]
+          </li>
+        </ul>
+
+        <!-- staticAnswerList -->
+        <ul v-if="item.staticAnswerList" class="cb-bot-static-answer-list">
+          <li v-for="staticAnswer in item.staticAnswerList" class="cb-bot-static-answer" v-on:click="clickStaticAnswer(staticAnswer)">
+            [[staticAnswer.displayText]]
+          </li>
+        </ul>
+
+      </div>
+      <!-- end bot remark-->
+
+      <!-- user remark -->
+      <div class="cb-talk-user" v-if="item.who == 'user'">
+        [[item.displayText]]
+      </div>
+      <!-- enr user remark -->
+
+    </div>
+  </div>
+
+</script>
+
+<script>
+  const CbTalkArea = Vue.extend({
+    template: '#cb-talk',
+    props: {
+      talk: {
+        type: Array,
+        required: true
+      },
+      sendQuestion: {
+        type: Function,
+        required: true
+      },
+      sendStaticAnswer: {
+        type: Function,
+        required: true
+      }
+    },
+    delimiters: ["[[", "]]"],
+    methods: {
+      clickQuestion: function (question) {
+        this.sendQuestion(question)
+      },
+      clickStaticAnswer: function (answer) {
+        this.sendStaticAnswer(answer)
+      }
+    }
+  });
+</script>
+
+<!-- component control area-->
+<script type="text/x-template" id="cb-control">
+  <div class="cb-control">
+    <input type="text" class="cb-input" v-model="query" />
+    <button class="cb-send-button" v-on:click="clickSend">send</button>
+  </div>
+</script>
+
+<script>
+  const CbControlArea = Vue.extend({
+    template: '#cb-control',
+    props: {
+      sendFreeText: {
+        type: Function,
+        required: true
+      }
+    },
+    methods: {
+      clickSend: function () {
+        this.sendFreeText(this.query);
+      }
+    },
+    data: function () {
+      return {
+        query: ''
+      }
+    },
+    delimiters: ["[[", "]]"]
+  });
+</script>
+
+<script>
+  Vue.config.devtools = true;
+
+  const app = new Vue({
+    components: {
+      'cb-talk': CbTalkArea,
+      'cb-control': CbControlArea
+    },
+    data: {
+      talk: [
+        {
+          who: "bot",
+          staticAnswerId: 1,
+          answer: "こんにちは！<br>困ったことがあれば入力欄から送信してね",
+          questionList: [
+            {
+              qa_id: 2222,
+              question: "〇〇はありますか？"
+            },
+            {
+              qa_id: 2223,
+              question: "ログインできません"
+            }
+          ],
+          staticAnswerList: [
+            {
+              id: 1,
+              title: "start",
+              displayText: "最初の回答"
+            }
+          ]
+        },
+        {
+          who: "user",
+          displayText: "ユーザーの発言",
+          type: "freeText"
+        },
+        {
+          who: "bot",
+          answer: "こんにちは！<br>困ったことがあれば入力欄から送信してね"
+        },
+        {
+          who: "user",
+          displayText: "ユーザーの発言2",
+          type: "freeText"
+        },
+        {
+          who: "bot",
+          questionList: [
+            {
+              qa_id: 2222,
+              question: "〇〇はありますか？"
+            },
+            {
+              qa_id: 2223,
+              question: "ログインできません"
+            }
+          ]
+        },
+        {
+          who: "user",
+          displayText: "ユーザーの発言3",
+          type: "freeText"
+        },
+        {
+          who: "bot",
+          staticAnswerId: 1,
+          staticAnswerList: [
+            {
+              id: 1,
+              title: "start",
+              displayText: "最初の回答"
+            }
+          ]
+        },
+        {
+          who: "user",
+          displayText: "ユーザーの発言4",
+          type: "freeText"
+        }
+      ]
+    },
+    delimiters: ["[[", "]]"],
+    methods: {
+      sendQuestion: function (question) {
+        userRemark = {
+          who: 'user',
+          displayText: question.question
+        }
+        this.talk.push(userRemark)
+      },
+      sendStaticAnswer: function (staticAnswer) {
+        userRemark = {
+          who: 'user',
+          displayText: staticAnswer.displayText
+        }
+        this.talk.push(userRemark)
+
+      },
+      sendFreeText: function (text) {
+        userRemark = {
+          who: 'user',
+          displayText: text
+        }
+        this.talk.push(userRemark)
+
+      }
+    }
+  }).$mount('#cb-area')
+
+</script>
