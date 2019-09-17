@@ -32,8 +32,12 @@ def create_app(test_config=None):
     def hello():
         return 'Hello, World!!!!!'
 
-    from chatbot.front import index
-    app.register_blueprint(index.bp)
+    from chatbot.front import index as front
+    app.register_blueprint(front.bp)
     app.add_url_rule('/', endpoint='index')
+
+    from chatbot.api import index as api
+    app.register_blueprint(api.bp)
+    app.add_url_rule('/api', endpoint='api')
 
     return app

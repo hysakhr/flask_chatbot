@@ -1,4 +1,5 @@
 {
+  "type": "freeText",
   "query": "ユーザーの発言",
   "qa_id": 123,
   "static_query": "start"
