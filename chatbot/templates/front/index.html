@@ -111,6 +111,7 @@
     methods: {
       clickSend: function () {
         this.sendFreeText(this.query);
+        this.query = '';
       }
     },
     data: function () {
@@ -207,26 +208,71 @@
     delimiters: ["[[", "]]"],
     methods: {
       sendQuestion: function (question) {
-        userRemark = {
-          who: 'user',
-          displayText: question.question
-        }
-        this.talk.push(userRemark)
+        this.addUserRemark(question.question)
+
+        axios.post('/api/talk', {
+          type: 'question',
+          qa_id: question.qa_id
+        }).then(res => {
+          this.addBotRemark(res.data);
+        });
       },
       sendStaticAnswer: function (staticAnswer) {
-        userRemark = {
-          who: 'user',
-          displayText: staticAnswer.displayText
-        }
-        this.talk.push(userRemark)
+        this.addUserRemark(staticAnswer.displayText);
+
+        axios.post('/api/talk', {
+          type: 'staticAnswer',
+          static_query: staticAnswer.title
+        }).then(res => {
+          this.addBotRemark(res.data);
+        });
 
       },
       sendFreeText: function (text) {
+        if (!text) {
+          return
+        }
+
+        this.addUserRemark(text);
+
+        axios.post('/api/talk', {
+          type: 'freeText',
+          query: text
+        }).then(res => {
+          this.addBotRemark(res.data);
+        });
+
+      },
+      addUserRemark: function (text) {
+
         userRemark = {
           who: 'user',
           displayText: text
         }
         this.talk.push(userRemark)
+
+      },
+      addBotRemark: function (res) {
+        components = res.components;
+        console.log(res);
+
+        botRemark = {
+          who: 'bot'
+        }
+
+        if (components.answer) {
+          botRemark.answer = components.answer.answer;
+        }
+
+        if (components.questionList) {
+          botRemark.questionList = components.questionList;
+        }
+
+        if (components.staticAnswerList) {
+          botRemark.staticAnswerList = components.staticAnswerList
+        }
+
+        this.talk.push(botRemark)
 
       }
     }
