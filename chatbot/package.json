@@ -1,0 +1,16 @@
+{
+  "name": "flask_chatbot",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "watch": "node-sass --include-path scss scss/style.scss static/style.css -w",
+    "build": "node-sass --include-path scss scss/style.scss static/style.css --output-style compressed"
+  },
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "node-sass": "^4.12.0"
+  }
+}
