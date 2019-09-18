@@ -26,14 +26,14 @@
 
 <!-- component talk area -->
 <script type="text/x-template" id="cb-talk">
-  <div class="cb-talk">
+  <div id="cb-talk">
 
     <div v-for="item in talk" :key="item" class="cb-remark">
       <!-- bot remark -->
-      <div class="cb-talk-bot" v-if="item.who == 'bot'">
+      <div class="cb-remark-bot" v-if="item.who == 'bot'">
 
         <!-- answer -->
-        <p v-if="item.answer" class="cb-bot-answer">[[item.answer]]</p>
+        <p v-if="item.answer" class="cb-bot-answer"><span v-html="item.answer"></span></p>
 
         <!-- questionList -->
         <ul v-if="item.questionList" class="cb-bot-question-list">
@@ -53,8 +53,10 @@
       <!-- end bot remark-->
 
       <!-- user remark -->
-      <div class="cb-talk-user" v-if="item.who == 'user'">
+      <div class="cb-remark-user" v-if="item.who == 'user'">
+        <p class="cb-user-input">
         [[item.displayText]]
+        </p>
       </div>
       <!-- enr user remark -->
 
@@ -95,8 +97,10 @@
 <!-- component control area-->
 <script type="text/x-template" id="cb-control">
   <div class="cb-control">
-    <input type="text" class="cb-input" v-model="query" />
-    <button class="cb-send-button" v-on:click="clickSend">send</button>
+    <form v-on:submit.prevent="doSubmit">
+      <input type="text" class="cb-input" v-model="query" />
+      <button class="cb-send-button" type="submit">send</button>
+    </form>
   </div>
 </script>
 
@@ -110,7 +114,7 @@
       }
     },
     methods: {
-      clickSend: function () {
+      doSubmit: function () {
         this.sendFreeText(this.query);
         this.query = '';
       }
@@ -250,31 +254,60 @@
           who: 'user',
           displayText: text
         }
-        this.talk.push(userRemark)
+        this.talk.push(userRemark);
+
+        // talk area scroll to bottom (display user input)
+        this.scrollToBottom(500);
 
       },
       addBotRemark: function (res) {
-        components = res.components;
-        console.log(res);
+        setTimeout(() => {
 
-        botRemark = {
-          who: 'bot'
-        }
+          components = res.components;
 
-        if (components.answer) {
-          botRemark.answer = components.answer.answer;
-        }
+          botRemark = {
+            who: 'bot'
+          }
 
-        if (components.questionList) {
-          botRemark.questionList = components.questionList;
-        }
+          if (components.answer) {
+            botRemark.answer = components.answer.answer;
+          }
 
-        if (components.staticAnswerList) {
-          botRemark.staticAnswerList = components.staticAnswerList
-        }
+          if (components.questionList) {
+            botRemark.questionList = components.questionList;
+          }
 
-        this.talk.push(botRemark)
+          if (components.staticAnswerList) {
+            botRemark.staticAnswerList = components.staticAnswerList
+          }
 
+          this.talk.push(botRemark);
+
+          // talk area scroll to bottom (display bot remark)
+          this.scrollToBottom(3000);
+        }, 500);
+
+      },
+      scrollToBottom: function (duration) {
+        duration = duration || 1000;
+
+        Vue.nextTick(() => {
+          const obj = document.getElementById('cb-talk');
+          const incByMs = (obj.scrollHeight - (obj.scrollTop + obj.clientHeight)) / duration;
+          const start = new Date().getTime();
+
+          const animate = () => {
+            const now = new Date().getTime();
+            obj.scrollTop += incByMs * (now - start);
+            if ((obj.scrollTop + obj.clientHeight) >= obj.scrollHeight) {
+              obj.scrollTop = obj.scrollHeight;
+            } else {
+              animation = requestAnimationFrame(animate)
+            }
+          }
+          let animation = requestAnimationFrame(animate);
+
+        });
       }
     }
   }).$mount('#cb-area')
