@@ -1,3 +1,82 @@
+/* attribute */
 html, body {
   margin: 0;
   padding: 0; }
+  html #cb-area, body #cb-area {
+    font-size: 16px;
+    border: 1px solid gray; }
+    html #cb-area *, body #cb-area * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0; }
+    html #cb-area li, body #cb-area li {
+      list-style: none; }
+    html #cb-area #cb-talk, body #cb-area #cb-talk {
+      height: 650px;
+      overflow: visible scroll;
+      padding-top: 10px;
+      word-break: break-all; }
+      html #cb-area #cb-talk .cb-remark, body #cb-area #cb-talk .cb-remark {
+        padding: 0px 30px 15px 15px; }
+        html #cb-area #cb-talk .cb-remark .cb-remark-bot, body #cb-area #cb-talk .cb-remark .cb-remark-bot {
+          padding-right: 20px; }
+          html #cb-area #cb-talk .cb-remark .cb-remark-bot .cb-bot-answer, body #cb-area #cb-talk .cb-remark .cb-remark-bot .cb-bot-answer {
+            background-color: #b3e5fc;
+            border-radius: 10px;
+            padding: 10px;
+            margin-bottom: 10px;
+            display: inline-block; }
+          html #cb-area #cb-talk .cb-remark .cb-remark-bot .cb-bot-question-list li, body #cb-area #cb-talk .cb-remark .cb-remark-bot .cb-bot-question-list li {
+            background-color: #b3e5fc;
+            border-radius: 10px;
+            padding: 10px;
+            margin: 0 0 10px 15px; }
+            html #cb-area #cb-talk .cb-remark .cb-remark-bot .cb-bot-question-list li:hover, body #cb-area #cb-talk .cb-remark .cb-remark-bot .cb-bot-question-list li:hover {
+              cursor: pointer;
+              opacity: 0.7; }
+          html #cb-area #cb-talk .cb-remark .cb-remark-bot .cb-bot-static-answer-list li, body #cb-area #cb-talk .cb-remark .cb-remark-bot .cb-bot-static-answer-list li {
+            background-color: #b3e5fc;
+            border-radius: 10px;
+            padding: 10px;
+            margin: 0 0 10px 15px; }
+            html #cb-area #cb-talk .cb-remark .cb-remark-bot .cb-bot-static-answer-list li:hover, body #cb-area #cb-talk .cb-remark .cb-remark-bot .cb-bot-static-answer-list li:hover {
+              cursor: pointer;
+              opacity: 0.7; }
+        html #cb-area #cb-talk .cb-remark .cb-remark-user, body #cb-area #cb-talk .cb-remark .cb-remark-user {
+          text-align: right;
+          padding-left: 30px; }
+          html #cb-area #cb-talk .cb-remark .cb-remark-user .cb-user-input, body #cb-area #cb-talk .cb-remark .cb-remark-user .cb-user-input {
+            background-color: #f5f5f5;
+            padding: 10px;
+            border-radius: 10px;
+            display: inline-block;
+            text-align: left; }
+    html #cb-area .cb-control, body #cb-area .cb-control {
+      height: 50px;
+      background-color: #6ab7ff;
+      position: relative;
+      padding: 6px 10px; }
+      html #cb-area .cb-control input, body #cb-area .cb-control input {
+        border: 0px;
+        border-radius: 19px;
+        height: 38px;
+        width: 100%;
+        padding-right: 57px;
+        text-indent: 10px; }
+      html #cb-area .cb-control button, body #cb-area .cb-control button {
+        position: absolute;
+        top: 8px;
+        right: 12px;
+        height: 34px;
+        border: none;
+        border-radius: 18px;
+        background-color: #005cb2;
+        color: white;
+        font-weight: bold;
+        width: 50px;
+        outline: none;
+        cursor: pointer; }
+        html #cb-area .cb-control button:hover, body #cb-area .cb-control button:hover {
+          background-color: white;
+          color: #005cb2;
+          border: 1px solid #005cb2; }

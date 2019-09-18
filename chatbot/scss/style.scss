@@ -1,4 +1,130 @@
+/* attribute */
+$REMARK_BOT_ANSWER_BG: #b3e5fc;
+$REMARK_BOT_QUESTION_BG: #b3e5fc;
+$REMARK_BOT_STATIC_ANSWER_BG: #b3e5fc;
+
+$REMARK_USER_INPUT_BG: #f5f5f5;
+
+$SEND_BUTTON_BG:#005cb2;
+$SEND_BUTTON_TEXT: white;
+
 html, body {
   margin: 0;
   padding: 0;
+
+  #cb-area {
+    font-size: 16px;
+    border: 1px solid gray;
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    li {
+      list-style: none;
+    }
+
+    #cb-talk {
+      height: 650px;
+      overflow: visible scroll;
+      padding-top: 10px;
+      word-break: break-all;
+
+      .cb-remark {
+        padding: 0px 30px 15px 15px;
+
+        .cb-remark-bot {
+          padding-right: 20px;
+
+          .cb-bot-answer {
+            background-color: $REMARK_BOT_ANSWER_BG;
+            border-radius: 10px;
+            padding: 10px;
+            margin-bottom: 10px;
+            display: inline-block;
+          }
+
+          .cb-bot-question-list {
+            li {
+              background-color: $REMARK_BOT_QUESTION_BG;
+              border-radius: 10px;
+              padding: 10px;
+              margin: 0 0 10px 15px;
+
+              &:hover {
+                cursor: pointer;
+                opacity: 0.7;
+              }
+            }
+          }
+
+          .cb-bot-static-answer-list {
+            li {
+              background-color: $REMARK_BOT_STATIC_ANSWER_BG; 
+              border-radius: 10px;
+              padding: 10px;
+              margin: 0 0 10px 15px;
+
+              &:hover {
+                cursor: pointer;
+                opacity: 0.7;
+              }
+            }
+          }
+        }
+
+        .cb-remark-user {
+          text-align: right;
+          padding-left: 30px;
+
+          .cb-user-input {
+            background-color: $REMARK_USER_INPUT_BG;
+            padding: 10px;
+            border-radius: 10px;
+            display: inline-block;
+            text-align: left;
+          }
+        }
+      }
+    }
+
+    .cb-control {
+      height: 50px;
+      background-color: #6ab7ff;
+      position: relative;
+      padding: 6px 10px;
+
+      input {
+        border: 0px;
+        border-radius: 19px;
+        height: 38px;
+        width: 100%;
+        padding-right: 57px;
+        text-indent: 10px;
+      }
+
+      button {
+        position: absolute;
+        top: 8px;
+        right: 12px;
+        height: 34px;
+        border: none;
+        border-radius: 18px;
+        background-color: $SEND_BUTTON_BG;
+        color: $SEND_BUTTON_TEXT;
+        font-weight: bold;
+        width: 50px;
+        outline: none;
+        cursor: pointer;
+
+        &:hover {
+          background-color: $SEND_BUTTON_TEXT;
+          color: $SEND_BUTTON_BG;
+          border: 1px solid $SEND_BUTTON_BG;
+        }
+      }
+    }
+  }
 }
