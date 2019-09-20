@@ -1,6 +1,7 @@
 import os
 
 from flask import Flask
+from chatbot.database import init_db
 
 
 def create_app(test_config=None):
@@ -16,10 +17,19 @@ def create_app(test_config=None):
 
     if test_config is None:
         # load the instance config, if it exists, when not testing
-        app.config.from_pyfile('config.py', silent=True)
+        config_object_string = 'chatbot.config.DevelopmentConfig'
+        if app.config['ENV'] == 'production':
+            config_object_string = 'chatbot.config.ProductionConfig'
+        elif app.config['ENV'] == 'test':
+            config_object_string = 'chatbot.config.TestingConfig'
+
+        app.config.from_object(config_object_string)
+        # app.config.from_pyfile('config.py', silent=True)
     else:
         # load the test config if passed in
         app.config.from_mapping(test_config)
+
+    init_db(app)
 
     # ensure the instance folder exists
     try:
@@ -39,5 +49,9 @@ def create_app(test_config=None):
     from chatbot.api import index as api
     app.register_blueprint(api.bp)
     app.add_url_rule('/api', endpoint='api')
+
+    from chatbot.api import auth
+    app.register_blueprint(auth.bp)
+    app.add_url_rule('/api/auth', endpoint='auth')
 
     return app

@@ -11,6 +11,8 @@ services:
     environment:
       - FLASK_APP=chatbot
       - FLASK_ENV=development
+    depends_on:
+      - mysql
   
   #mysql
   mysql:
