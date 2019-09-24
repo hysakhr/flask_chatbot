@@ -54,4 +54,12 @@ def create_app(test_config=None):
     app.register_blueprint(auth.bp)
     app.add_url_rule('/api/auth', endpoint='auth')
 
+    from chatbot.admin import index as admin
+    app.register_blueprint(admin.bp)
+    app.add_url_rule('/admin', endpoint='admin')
+
+    from chatbot.admin.faq import index as admin_faq
+    app.register_blueprint(admin_faq.bp)
+    app.add_url_rule('/admin/faq', endpoint='admin/faq')
+
     return app
