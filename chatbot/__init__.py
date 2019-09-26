@@ -1,7 +1,10 @@
 import os
 
 from flask import Flask
+from flask_injector import FlaskInjector
+
 from chatbot.database import init_db
+from chatbot.binds import configure
 
 
 def create_app(test_config=None):
@@ -37,29 +40,11 @@ def create_app(test_config=None):
     except OSError:
         pass
 
-    # a simple page that say hello
-    @app.route('/hello')
-    def hello():
-        return 'Hello, World!!!!!'
+    # route setting
+    from chatbot.routes import routes_setting
+    routes_setting(app)
 
-    from chatbot.front import index as front
-    app.register_blueprint(front.bp)
-    app.add_url_rule('/', endpoint='index')
-
-    from chatbot.api import index as api
-    app.register_blueprint(api.bp)
-    app.add_url_rule('/api', endpoint='api')
-
-    from chatbot.admin.controllers import auth
-    app.register_blueprint(auth.bp)
-    app.add_url_rule('/admin/auth', endpoint='admin/auth')
-
-    from chatbot.admin.controllers import index as admin
-    app.register_blueprint(admin.bp)
-    app.add_url_rule('/admin', endpoint='admin')
-
-    from chatbot.admin.controllers.faq import index as admin_faq
-    app.register_blueprint(admin_faq.bp)
-    app.add_url_rule('/admin/faq', endpoint='admin/faq')
+    # DI
+    FlaskInjector(app=app, modules=[configure])
 
     return app
