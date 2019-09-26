@@ -6,6 +6,6 @@ from flask import (
 
 from werkzeug.security import check_password_hash, generate_password_hash
 
-from chatbot.models import user
+from chatbot.models import User
 
-bp = Blueprint('auth', __name__, url_prefix='/api/auth')
+bp = Blueprint('admin/auth', __name__, url_prefix='/admin/auth')
