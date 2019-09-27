@@ -27,7 +27,7 @@
             <td>{{ faq_list.created_at }}</td>
             <td>{{ faq_list.updated_at }}</td>
             <td>
-              <a href="{{ url_for('admin/faq.update', id=faq_list['id']) }}">
+              <a href="{{ url_for('admin/faq_list.update', id=faq_list['id']) }}">
                 <div class="btn btn-block btn-default">名前変更</div>
               </a>
             </td>
