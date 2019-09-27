@@ -10,8 +10,8 @@ class FaqListRepositoryImpl(IFaqListRepository):
     def find_by_name(self, name: str) -> FaqListModel:
         pass
 
-    def save(self, FaqListModel):
-        db.session.add(FaqListModel)
+    def save(self, faq_list: FaqListModel):
+        db.session.add(faq_list)
         return db.session.commit()
 
     def get_list(self) -> list:

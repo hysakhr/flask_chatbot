@@ -12,7 +12,7 @@ class IFaqListRepository(metaclass=ABCMeta):
         pass
 
     @abstractclassmethod
-    def save(self, FaqListModel):
+    def save(self, faq_list: FaqListModel):
         pass
 
     @abstractclassmethod
