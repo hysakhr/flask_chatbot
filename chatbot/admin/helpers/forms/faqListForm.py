@@ -14,5 +14,5 @@ class FaqListForm(FlaskForm):
         if name.data == '':
             raise ValidationError('必須です。')
 
-        if len(name.data) > 10:
+        if len(name.data) > 255:
             raise ValidationError('255文字以内で入力してください。')
