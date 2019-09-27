@@ -1,10 +1,6 @@
 from flask import (
     Blueprint, request, render_template, redirect, url_for, current_app
 )
-from injector import inject
-
-from chatbot.models import FaqList
-from chatbot.database import db
 
 from chatbot.admin.domain.repositories.FaqListRepository import IFaqListRepository
 from chatbot.admin.domain.services.FaqListService import FaqListService

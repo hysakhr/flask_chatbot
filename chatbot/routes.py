@@ -21,3 +21,7 @@ def routes_setting(app: Flask):
     from chatbot.admin.controllers import faq_list as admin_faq_list
     app.register_blueprint(admin_faq_list.bp)
     app.add_url_rule('/admin/faq_list', endpoint='admin/faq_list')
+
+    from chatbot.admin.controllers import faq as admin_faq
+    app.register_blueprint(admin_faq.bp)
+    app.add_url_rule('/admin/faq', endpoint='admin/faq')

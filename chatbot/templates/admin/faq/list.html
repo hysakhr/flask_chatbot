@@ -1,0 +1,52 @@
+{% extends 'admin/layout.html' %}
+
+{% block title %}FAQ一覧{% endblock %}
+
+{% block content %}
+<div class="col-xs-12">
+  <div class="box">
+    <div class="box-header">
+      <h3 class="box-title">FAQ</h3>
+    </div>
+    <!-- /.box-header -->
+    <div class="box-body">
+      <table id="faq_lists" class="table table-bordered table-striped">
+        <thead>
+          <tr>
+            <th>ID</th>
+            <th>質問</th>
+            <th>作成日時</th>
+            <th>更新日時</th>
+            <th>操作</th>
+          </tr>
+        </thead>
+        <tbody>
+          {% for faq in faqs %}
+          <tr>
+            <td>{{ faq['id'] }}</td>
+            <td>{{ faq.question }}</td>
+            <td>{{ faq.created_at }}</td>
+            <td>{{ faq.updated_at }}</td>
+            <td>
+              <a href="{{ url_for('admin/faq.edit', id=faq['id']) }}">
+                <div class="btn btn-block btn-default">編集</div>
+              </a>
+            </td>
+          </tr>
+          {% endfor %}
+        </tbody>
+      </table>
+    </div>
+  </div>
+</div>
+
+{% endblock %}
+
+{% block before_close_body %}
+
+<script>
+  $(function () {
+    $('#faq_lists').DataTable()
+  })
+</script>
+{% endblock %}
