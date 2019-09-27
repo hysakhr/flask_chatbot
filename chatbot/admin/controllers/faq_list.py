@@ -26,8 +26,8 @@ def new():
     return redirect(url_for('admin/faq_list'))
 
 
-@bp.route('/<int:id>/update', methods=('GET', 'POST'))
-def update(id: int, faq_list_repository: IFaqListRepository):
+@bp.route('/<int:id>/edit', methods=('GET', 'POST'))
+def edit(id: int, faq_list_repository: IFaqListRepository):
     faq_service = FaqListService(faq_list_repository)
     faq_list = faq_service.find_by_id(
         id=id)
@@ -42,6 +42,6 @@ def update(id: int, faq_list_repository: IFaqListRepository):
             faq_service.save(faq_list)
             return redirect(url_for('admin/faq_list'))
     return render_template(
-        'admin/faq_list/update.html',
+        'admin/faq_list/edit.html',
         faq_list=faq_list,
         form=form)
