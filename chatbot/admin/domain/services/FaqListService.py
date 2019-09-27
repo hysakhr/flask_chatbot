@@ -2,7 +2,7 @@ from chatbot.admin.domain.repositories.FaqListRepository import IFaqListReposito
 from chatbot.models.FaqList import FaqListModel
 
 
-class FaqService:
+class FaqListService:
     def __init__(self, faq_list_repository: IFaqListRepository):
         self.faq_list_repository = faq_list_repository
 

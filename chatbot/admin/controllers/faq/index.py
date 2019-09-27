@@ -7,7 +7,7 @@ from chatbot.models import FaqList
 from chatbot.database import db
 
 from chatbot.admin.domain.repositories.FaqListRepository import IFaqListRepository
-from chatbot.admin.domain.services.FaqService import FaqService
+from chatbot.admin.domain.services.FaqListService import FaqListService
 from chatbot.admin.helpers.forms.faqListForm import FaqListForm
 
 bp = Blueprint('admin/faq', __name__, url_prefix='/admin/faq')
@@ -15,7 +15,7 @@ bp = Blueprint('admin/faq', __name__, url_prefix='/admin/faq')
 
 @bp.route('/')
 def index(faq_list_repository: IFaqListRepository):
-    faq_service = FaqService(faq_list_repository)
+    faq_service = FaqListService(faq_list_repository)
     faq_lists = faq_service.get_faq_lists()
     return render_template('admin/faq/index.html', faq_lists=faq_lists)
 
@@ -32,7 +32,7 @@ def new():
 
 @bp.route('/<int:id>/update', methods=('GET', 'POST'))
 def update(id: int, faq_list_repository: IFaqListRepository):
-    faq_service = FaqService(faq_list_repository)
+    faq_service = FaqListService(faq_list_repository)
     faq_list = faq_service.find_by_id(
         id=id)
 
