@@ -4,11 +4,16 @@ from chatbot.database import db
 
 
 class FaqListRepositoryImpl(IFaqListRepository):
-    def find(self, id: int) -> FaqListModel:
+    def find_by_id(self, id: int) -> FaqListModel:
+        return FaqListModel.query.get(id)
+
+    def find_by_name(self, name: str) -> FaqListModel:
         pass
 
     def save(self, FaqListModel):
-        pass
+        db.session.add(FaqListModel)
+        return db.session.commit()
 
-    def getList(self) -> list:
-        return db.session.query(FaqListModel).all()
+    def get_list(self) -> list:
+        return FaqListModel.query.order_by(FaqListModel.id).all()
+        # return db.session.query(FaqListModel).all()

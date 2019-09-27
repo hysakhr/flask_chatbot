@@ -26,6 +26,11 @@
             <td>{{ faq_list.name }}</td>
             <td>{{ faq_list.created_at }}</td>
             <td>{{ faq_list.updated_at }}</td>
+            <td>
+              <a href="{{ url_for('admin/faq.update', id=faq_list['id']) }}">
+                <div class="btn btn-block btn-default">名前変更</div>
+              </a>
+            </td>
           </tr>
           {% endfor %}
         </tbody>
@@ -37,9 +42,6 @@
 {% endblock %}
 
 {% block before_close_body %}
-<!-- DataTables -->
-<script src="/static/admin/bower_components/datatables.net/js/jquery.dataTables.min.js"></script>
-<script src="/static/admin/bower_components/datatables.net-bs/js/dataTables.bootstrap.min.js"></script>
 
 <script>
   $(function () {
