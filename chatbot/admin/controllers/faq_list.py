@@ -4,7 +4,7 @@ from flask import (
 
 from chatbot.admin.domain.repositories.FaqListRepository import IFaqListRepository
 from chatbot.admin.domain.services.FaqListService import FaqListService
-from chatbot.admin.helpers.forms.faqListForm import FaqListForm
+from chatbot.admin.helpers.forms.FaqListForm import FaqListForm
 
 bp = Blueprint('admin/faq_list', __name__, url_prefix='/admin/faq_list')
 

@@ -6,7 +6,7 @@ from chatbot.admin.domain.repositories.FaqRepository import IFaqRepository
 from chatbot.admin.domain.services.FaqService import FaqService
 from chatbot.admin.domain.repositories.FaqListRepository import IFaqListRepository
 from chatbot.admin.domain.services.FaqListService import FaqListService
-from chatbot.admin.helpers.forms.faqForm import FaqForm
+from chatbot.admin.helpers.forms.FaqForm import FaqForm
 
 bp = Blueprint('admin/faq', __name__, url_prefix='/admin/faq')
 
