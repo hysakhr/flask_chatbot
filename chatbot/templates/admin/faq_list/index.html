@@ -17,6 +17,8 @@
             <th>名前</th>
             <th>作成日時</th>
             <th>更新日時</th>
+            <th>一覧</th>
+            <th>操作</th>
           </tr>
         </thead>
         <tbody>
@@ -26,6 +28,11 @@
             <td>{{ faq_list.name }}</td>
             <td>{{ faq_list.created_at }}</td>
             <td>{{ faq_list.updated_at }}</td>
+            <td>
+              <a href="{{ url_for('admin/faq.list', faq_list_id=faq_list['id']) }}">
+                <div class="btn btn-block btn-default">FAQ一覧</div>
+              </a>
+            </td>
             <td>
               <a href="{{ url_for('admin/faq_list.edit', id=faq_list['id']) }}">
                 <div class="btn btn-block btn-default">名前変更</div>
