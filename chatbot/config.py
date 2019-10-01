@@ -5,6 +5,7 @@ class Config(object):
     DEBUG = False
     TESTING = False
     SQLALCHEMY_DATABASE_URI = 'sqlite:///:memory:'
+    FAQ_FILE_UPLOAD_DIR = '/flask_chatbot/chatbot/upload'
 
 
 class ProductionConfig(Config):

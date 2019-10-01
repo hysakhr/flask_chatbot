@@ -36,7 +36,8 @@ def create_app(test_config=None):
 
     # ensure the instance folder exists
     try:
-        os.makedirs(app.instance_path)
+        makedirs_not_exists(app.instance_path)
+        makedirs_not_exists(app.config['FAQ_FILE_UPLOAD_DIR'])
     except OSError:
         pass
 
@@ -48,3 +49,10 @@ def create_app(test_config=None):
     FlaskInjector(app=app, modules=[configure])
 
     return app
+
+
+def makedirs_not_exists(path: str):
+    if os.path.exists(path):
+        return
+
+    os.makedirs(path)
