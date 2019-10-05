@@ -6,8 +6,8 @@ from flask import (
 from werkzeug.utils import secure_filename
 
 from chatbot.admin.domain.repositories.FaqRepository import IFaqRepository
-from chatbot.admin.domain.services.FaqService import FaqService
 from chatbot.admin.domain.repositories.FaqListRepository import IFaqListRepository
+from chatbot.admin.domain.services.FaqService import FaqService
 from chatbot.admin.domain.services.FaqListService import FaqListService
 from chatbot.admin.domain.services.FaqFileImportService import FaqFileImportService
 from chatbot.admin.helpers.forms.FaqForm import FaqForm
@@ -55,8 +55,8 @@ def add(
         return render_template('admin/404.html'), 404
 
     faq_service = FaqService(faq_repository)
-    form = FaqForm()
     faq = faq_service.get_new_obj(faq_list_id=faq_list_id)
+    form = FaqForm()
 
     if request.method == 'POST':
         faq.answer = request.form['answer']
@@ -72,7 +72,7 @@ def add(
         faq_list=faq_list,
         faq=faq,
         form=form,
-        operation="新規作成")
+        operation="追加")
 
 
 @bp.route('/<int:id>/edit', methods=('GET', 'POST'))

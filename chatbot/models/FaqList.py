@@ -2,6 +2,9 @@ from datetime import datetime
 from chatbot.database import db
 from sqlalchemy.orm import relationship
 
+from chatbot.models.Faq import FaqModel
+from chatbot.models.Bot import BotModel
+
 
 class FaqListModel(db.Model):
     __tablename__ = 'faq_lists'
@@ -15,6 +18,7 @@ class FaqListModel(db.Model):
         default=datetime.now,
         onupdate=datetime.now)
     faqs = relationship('FaqModel', back_populates='faq_list')
+    bots = relationship('BotModel', back_populates='faq_list')
 
     def __init__(self, name):
         self.name = name

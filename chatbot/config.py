@@ -6,6 +6,7 @@ class Config(object):
     TESTING = False
     SQLALCHEMY_DATABASE_URI = 'sqlite:///:memory:'
     FAQ_FILE_UPLOAD_DIR = '/flask_chatbot/chatbot/upload'
+    ML_VARS_DIR = '/flask_chatbot/chatbot/ml_vars'
 
 
 class ProductionConfig(Config):

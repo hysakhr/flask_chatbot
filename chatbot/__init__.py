@@ -38,6 +38,7 @@ def create_app(test_config=None):
     try:
         makedirs_not_exists(app.instance_path)
         makedirs_not_exists(app.config['FAQ_FILE_UPLOAD_DIR'])
+        makedirs_not_exists(app.config['ML_VARS_DIR'])
     except OSError:
         pass
 

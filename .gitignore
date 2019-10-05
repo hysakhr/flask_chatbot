@@ -5,6 +5,7 @@ __pycache__/
 
 instance/
 upload/
+ml_vars/
 
 .pytest_cache/
 .coverage

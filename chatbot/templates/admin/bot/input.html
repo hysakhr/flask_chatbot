@@ -1,6 +1,6 @@
 {% extends 'admin/layout.html' %}
 
-{% block title %}FAQの{{ operation }}{% endblock %}
+{% block title %}BOTの{{ operation }}{% endblock %}
 
 {% block content %}
 
@@ -30,52 +30,30 @@
           </div>
         </div>
         <div class="form-group">
-          <label for="question" class="col-sm-2 control-label">質問</label>
+          <label for="name" class="col-sm-2 control-label">BOT名</label>
 
           <div class="col-sm-10">
-            <input type="text" name="question" class="form-control" id="question" placeholder="質問"
-              value="{{ faq['question'] }}" required>
-            {% for error in form.question.errors %}
+            <input type="text" name="name" class="form-control" id="name" placeholder="質問" value="{{ bot['name'] }}"
+              required>
+            {% for error in form.name.errors %}
             <div class="text-danger">{{ error }}</div>
             {% endfor %}
           </div>
         </div>
-        <div class="form-group">
-          <label for="answer" class="col-sm-2 control-label">回答</label>
-
-          <div class="col-sm-10">
-            <textarea name="answer" class="form-control" id="answer" rows="7" required>{{ faq['answer'] }}</textarea>
-            {% for error in form.answer.errors %}
-            <div class="text-danger">{{ error }}</div>
-            {% endfor %}
-          </div>
-        </div>
+        {% if operation == '編集' %}
         <div class="form-group">
           <label for="enable_flag" class="col-sm-2 control-label">有効・無効</label>
 
           <div class="col-sm-10">
             <div class="checkbox">
               <label>
-                <input type="checkbox" name="enable_flag" value="true" {% if faq.enable_flag %}checked{% endif %}>有効
+                <input type="checkbox" name="enable_flag" value="true" {% if bot.enable_flag %}checked{% endif %}>有効
               </label>
             </div>
             </checkbox>
           </div>
         </div>
-        <div class="form-group">
-          <label for="question" class="col-sm-2 control-label">インポート時の質問</label>
-
-          <div class="col-sm-10">
-            {{ faq['question_org'] }}
-          </div>
-        </div>
-        <div class="form-group">
-          <label for="question" class="col-sm-2 control-label">インポート時の質問</label>
-
-          <div class="col-sm-10">
-            {{ faq['answer_org'] }}
-          </div>
-        </div>
+        {% endif %}
       </div>
       <!-- /.box-body -->
       <div class="box-footer">

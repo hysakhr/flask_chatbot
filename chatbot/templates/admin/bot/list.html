@@ -1,6 +1,6 @@
 {% extends 'admin/layout.html' %}
 
-{% block title %}FAQ一覧{% endblock %}
+{% block title%}BOT一覧{% endblock %}
 
 {% block content %}
 <div class="col-xs-12">
@@ -11,33 +11,39 @@
           <h3 class="box-title">リスト名：{{ faq_list['name'] }}</h3>
         </div>
         <div class="col-xs-3">
-          <a href="{{ url_for('admin/faq.add', faq_list_id=faq_list.id) }}">
-            <div class="btn btn-block btn-primary">FAQ追加</div>
+          <a href="{{ url_for('admin/bot.add', faq_list_id=faq_list.id) }}">
+            <div class="btn btn-block btn-primary">BOT追加</div>
           </a>
         </div>
       </div>
     </div>
     <!-- /.box-header -->
     <div class="box-body">
-      <table id="faq_lists" class="table table-bordered table-striped">
+      <table id="bot_lists" class="table table-bordered table-striped">
         <thead>
           <tr>
             <th>ID</th>
-            <th>質問</th>
+            <th>BOT名</th>
             <th>作成日時</th>
             <th>更新日時</th>
+            <th>学習</th>
             <th>操作</th>
           </tr>
         </thead>
         <tbody>
-          {% for faq in faqs %}
+          {% for bot in bots %}
           <tr>
-            <td>{{ faq.id }}</td>
-            <td>{{ faq.question }}</td>
-            <td>{{ faq.created_at }}</td>
-            <td>{{ faq.updated_at }}</td>
+            <td>{{ bot.id }}</td>
+            <td>{{ bot.name }}</td>
+            <td>{{ bot.created_at }}</td>
+            <td>{{ bot.updated_at }}</td>
             <td>
-              <a href="{{ url_for('admin/faq.edit', id=faq.id) }}">
+              <a href="{{ url_for('admin/bot.fit', id=bot.id) }}">
+                <div class="btn btn-block btn-default">学習</div>
+              </a>
+            </td>
+            <td>
+              <a href="{{ url_for('admin/bot.edit', id=bot.id) }}">
                 <div class="btn btn-block btn-default">編集</div>
               </a>
             </td>
@@ -55,7 +61,7 @@
 
 <script>
   $(function () {
-    $('#faq_lists').DataTable()
+    $('#bot_lists').DataTable()
   })
 </script>
 {% endblock %}

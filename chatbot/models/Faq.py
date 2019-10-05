@@ -22,6 +22,7 @@ class FaqModel(db.Model):
         nullable=False,
         default=datetime.now,
         onupdate=datetime.now)
+
     faq_list = relationship('FaqListModel', back_populates='faqs')
 
     def __init__(
