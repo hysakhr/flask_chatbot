@@ -9,10 +9,11 @@ services:
     volumes:
       - ./:/flask_chatbot
     environment:
-      - FLASK_APP=chatbot
+      - FLASK_APP=chatbot.run
       - FLASK_ENV=development
     depends_on:
       - mysql
+      - redis
   
   #mysql
   mysql:
@@ -30,3 +31,9 @@ services:
       - ./db/my.cnf:/etc/mysql/conf.d/my.cnf
     ports:
       - 3306:3306
+  
+  redis:
+    image: redis:5.0.6-alpine
+    container_name: redis
+    ports:
+      - 6379:6379

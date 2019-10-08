@@ -8,6 +8,10 @@ class Config(object):
     FAQ_FILE_UPLOAD_DIR = '/flask_chatbot/chatbot/upload'
     ML_VARS_DIR = '/flask_chatbot/chatbot/ml_vars'
 
+    CELERY_BROKER_URL = 'redis://redis:6379'
+    CELERY_RESULT_BACKEND = 'redis://redis:6379'
+    CELERY_IMPORTS = ['chatbot.admin.domain.tasks']
+
 
 class ProductionConfig(Config):
     SQLALCHEMY_DATABASE_URI = 'mysql://user@localhost/foo'
@@ -31,3 +35,12 @@ class DevelopmentConfig(Config):
 
 class TestingConfig(Config):
     TESTING = True
+
+
+def get_config(env='development'):
+    if env == 'production':
+        return ProductionConfig()
+    elif env == 'test':
+        return TestingConfig()
+    else:
+        return DevelopmentConfig()
