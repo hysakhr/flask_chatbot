@@ -98,23 +98,7 @@ def fit(
         bot_repository: IBotRepository):
     # bot data
     bot_service = BotService(bot_repository)
-    ret = bot_service.fit(bot_id=id, faq_list_repository=faq_list_repository)
+    bot_service.fit(bot_id=id)
+    bot = bot_service.find_by_id(id)
 
-    import pprint
-    from inspect import getmembers
-    from collections import Iterable
-    # dump = None
-    # if isinstance(ret, Iterable):
-    #     dump = []
-    #     for item in ret:
-    #         dump.append(item)
-    # else:
-    #     dump = ret
-    dump = ret
-    # dump = pprint.pformat(getmembers(ret))
-
-    return render_template(
-        'admin/dump.html',
-        dump=pprint.pformat(
-            dump,
-            depth=2))
+    return redirect(url_for('admin/bot.list', faq_list_id=bot.faq_list_id))

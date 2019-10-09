@@ -8,9 +8,11 @@ class Config(object):
     FAQ_FILE_UPLOAD_DIR = '/flask_chatbot/chatbot/upload'
     ML_VARS_DIR = '/flask_chatbot/chatbot/ml_vars'
 
-    CELERY_BROKER_URL = 'redis://redis:6379'
-    CELERY_RESULT_BACKEND = 'redis://redis:6379'
-    CELERY_IMPORTS = ['chatbot.admin.domain.tasks']
+    CELERY = {
+        'broker': 'redis://redis:6379',
+        'backend': 'redis://redis:6379',
+        'imports': ['chatbot.admin.domain.tasks'],
+    }
 
 
 class ProductionConfig(Config):

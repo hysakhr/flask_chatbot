@@ -1,6 +1,6 @@
 {% extends 'admin/layout.html' %}
 
-{% block title%}BOT一覧{% endblock %}
+{% block title%}リスト名：{{ faq_list['name'] }}のBOT一覧{% endblock %}
 
 {% block content %}
 <div class="col-xs-12">
@@ -8,7 +8,7 @@
     <div class="box-header">
       <div class="row">
         <div class="col-xs-9">
-          <h3 class="box-title">リスト名：{{ faq_list['name'] }}</h3>
+          <!-- <h3 class="box-title">リスト名：{{ faq_list['name'] }}</h3> -->
         </div>
         <div class="col-xs-3">
           <a href="{{ url_for('admin/bot.add', faq_list_id=faq_list.id) }}">
@@ -26,6 +26,7 @@
             <th>BOT名</th>
             <th>作成日時</th>
             <th>更新日時</th>
+            <th>学習状況</th>
             <th>学習</th>
             <th>操作</th>
           </tr>
@@ -37,14 +38,19 @@
             <td>{{ bot.name }}</td>
             <td>{{ bot.created_at }}</td>
             <td>{{ bot.updated_at }}</td>
+            <td>{{ bot.fitted_state_label }}</td>
             <td>
+              {% if bot.fitted_state_label == '学習中' %}
+              <div class="btn btn-block btn-default disabled">学習</div>
+              {% else %}
               <a href="{{ url_for('admin/bot.fit', id=bot.id) }}">
-                <div class="btn btn-block btn-default">学習</div>
+                <div class="btn btn-block btn-success">学習</div>
               </a>
+              {% endif %}
             </td>
             <td>
               <a href="{{ url_for('admin/bot.edit', id=bot.id) }}">
-                <div class="btn btn-block btn-default">編集</div>
+                <div class="btn btn-block btn-info">編集</div>
               </a>
             </td>
           </tr>

@@ -40,20 +40,13 @@
             {% endfor %}
           </div>
         </div>
-        {% if operation == '編集' %}
         <div class="form-group">
-          <label for="enable_flag" class="col-sm-2 control-label">有効・無効</label>
+          <label class="col-sm-2 control-label">学習状況</label>
 
           <div class="col-sm-10">
-            <div class="checkbox">
-              <label>
-                <input type="checkbox" name="enable_flag" value="true" {% if bot.enable_flag %}checked{% endif %}>有効
-              </label>
-            </div>
-            </checkbox>
+            {{ bot['fitted_state_label'] }}
           </div>
         </div>
-        {% endif %}
       </div>
       <!-- /.box-body -->
       <div class="box-footer">
