@@ -2,6 +2,24 @@ from datetime import datetime
 from chatbot.database import db
 from sqlalchemy.orm import relationship
 
+# class 定義せずに many to many 用 tableを定義
+# metadata は不要でした
+# https://flask-sqlalchemy.palletsprojects.com/en/2.x/models/
+# 検索するとTable class のコンストラクタ第2引数に metadata を渡しているものが多数出てきたので
+# 記述していたがうまく行かなかった
+faqs_faqs_table = db.Table(
+    'faqs_faqs',
+    db.Column(
+        'from_faq_id',
+        db.Integer,
+        db.ForeignKey('faqs.id'),
+        primary_key=True),
+    db.Column(
+        'to_faq_id',
+        db.Integer,
+        db.ForeignKey('faqs.id'),
+        primary_key=True))
+
 
 class FaqModel(db.Model):
     __tablename__ = 'faqs'
@@ -24,6 +42,12 @@ class FaqModel(db.Model):
         onupdate=datetime.now)
 
     faq_list = relationship('FaqListModel', back_populates='faqs')
+
+    faqs = relationship(
+        'FaqModel',
+        secondary=faqs_faqs_table,
+        primaryjoin=id == faqs_faqs_table.c.from_faq_id,
+        secondaryjoin=id == faqs_faqs_table.c.to_faq_id)
 
     def __init__(
             self,

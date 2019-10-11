@@ -1,0 +1,76 @@
+{% extends 'admin/layout.html' %}
+
+{% block title %}BOT一覧{% endblock %}
+
+{% block content %}
+<div class="col-xs-12">
+  <div class="box">
+    <div class="box-header">
+      <div class="row">
+        <div class="col-xs-9">
+        </div>
+        <div class="col-xs-3">
+          <a href="{{ url_for('admin/bot.add') }}">
+            <div class="btn btn-block btn-primary">BOT追加</div>
+          </a>
+        </div>
+      </div>
+    </div>
+    <!-- /.box-header -->
+    <div class="box-body">
+      <table id="bot_lists" class="table table-bordered table-striped">
+        <thead>
+          <tr>
+            <th>ID</th>
+            <th>BOT名</th>
+            <th>学習対象</th>
+            <th>作成日時</th>
+            <th>更新日時</th>
+            <th>学習状況</th>
+            <th>学習</th>
+            <th>操作</th>
+            <th>有効 / 無効</th>
+          </tr>
+        </thead>
+        <tbody>
+          {% for bot in bots %}
+          <tr>
+            <td>{{ bot.id }}</td>
+            <td>{{ bot.name }}</td>
+            <td>{{ bot.faq_list.name }}</td>
+            <td>{{ bot.created_at }}</td>
+            <td>{{ bot.updated_at }}</td>
+            <td>{{ bot.fitted_state_label }}</td>
+            <td>
+              {% if bot.fit_button_enable %}
+              <a href="{{ url_for('admin/bot.fit', id=bot.id) }}">
+                <div class="btn btn-block btn-success">学習</div>
+              </a>
+              {% else %}
+              <div class="btn btn-block btn-default disabled">学習</div>
+              {% endif %}
+            </td>
+            <td>
+              <a href="{{ url_for('admin/bot.edit', id=bot.id) }}">
+                <div class="btn btn-block btn-info">編集</div>
+              </a>
+            </td>
+            <td>{{ bot.enable_label }}</td>
+          </tr>
+          {% endfor %}
+        </tbody>
+      </table>
+    </div>
+  </div>
+</div>
+
+{% endblock %}
+
+{% block before_close_body %}
+
+<script>
+  $(function () {
+    $('#bot_lists').DataTable()
+  })
+</script>
+{% endblock %}
