@@ -4,11 +4,6 @@ from chatbot.database import db
 
 
 class BotRepositoryImpl(IBotRepository):
-    def get_list_by_faq_list_id(self, faq_list_id: int) -> list:
-        return db.session.query(BotModel).filter(
-            BotModel.faq_list_id == faq_list_id).order_by(
-            BotModel.id).all()
-
     def get_list(self) -> list:
         return db.session.query(BotModel).order_by(
             BotModel.id).all()

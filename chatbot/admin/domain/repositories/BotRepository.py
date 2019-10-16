@@ -4,10 +4,6 @@ from chatbot.models.Bot import BotModel
 
 class IBotRepository(metaclass=ABCMeta):
     @abstractclassmethod
-    def get_list_by_faq_list_id(self, faq_list_id: int) -> list:
-        pass
-
-    @abstractclassmethod
     def get_list(self) -> list:
         pass
 

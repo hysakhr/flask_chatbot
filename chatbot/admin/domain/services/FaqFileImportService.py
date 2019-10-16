@@ -7,6 +7,7 @@ from chatbot.admin.domain.repositories.FaqListRepository import IFaqListReposito
 from chatbot.models.Faq import FaqModel
 from chatbot.models.FaqList import FaqListModel
 from chatbot.models.FaqFIleImport import FaqFileImportModel
+from chatbot.models.Bot import BotModel
 
 
 class FaqFileImportService:
@@ -15,8 +16,8 @@ class FaqFileImportService:
         self.faq_repository = faq_repository
         self.faq_list_repository = faq_list_repository
 
-    def get_new_obj(self):
-        return FaqFileImportModel(name='', file_path='')
+    def get_new_obj(self, bot: BotModel = None):
+        return FaqFileImportModel(name='', file_path='', bot=bot)
 
     def import_tsv(self, faq_file_import: FaqFileImportModel):
         if not os.path.exists(faq_file_import.file_path):
@@ -25,7 +26,9 @@ class FaqFileImportService:
         session = db.Session()
         try:
             # db operation
-            faq_list = FaqListModel(name=faq_file_import.name)
+            faq_list = FaqListModel(
+                name=faq_file_import.name,
+                bot_id=faq_file_import.bot.id)
             self.faq_list_repository.save(faq_list)
 
             with open(faq_file_import.file_path, 'rt') as fp:

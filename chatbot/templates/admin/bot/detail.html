@@ -1,0 +1,157 @@
+{% extends 'admin/layout.html' %}
+
+{% block title %}Bot詳細{% endblock %}
+
+{% block content %}
+
+<div class="col-xs-12">
+  <!-- Horizontal Form -->
+  <div class="box box-info">
+    <div class="box-header with-border">
+      <div class="row">
+        <div class="col-xs-9">
+          <h3 class="box-title">基本情報</h3>
+        </div>
+        <div class="col-xs-3">
+          <a href="{{ url_for('admin/bot.edit', id=bot.id) }}">
+            <div class="btn btn-block btn-primary">編集</div>
+          </a>
+        </div>
+      </div>
+    </div>
+    <!-- /.box-header -->
+    <div class="box-body">
+      <dl class="dl-horizontal">
+        <dt>ID</dt>
+        <dd>{{ bot.id }}</dd>
+        <dt>名前</dt>
+        <dd>{{ bot.name }}</dd>
+        <dt>学習対象のFAQリスト</dt>
+        <dd>{{ bot.fitted_faq_list.name }}</dd>
+        <dt>学習状態</dt>
+        <dd>{{ bot.fitted_state_label }}</dd>
+        <dt>最終学習日時</dt>
+        <dd>{{ bot.last_fitted_at if bot.last_fitted_at }}</dd>
+        <dt>有効 / 無効</dt>
+        <dd>{{ bot.enable_label }}</dd>
+      </dl>
+    </div>
+    <!-- /.box -->
+  </div>
+  <!-- /.col -->
+</div>
+
+<!-- FAQリスト一覧 -->
+<div class="col-xs-12">
+  <div class="box box-success">
+    <div class="box-header with-border">
+      <div class="row">
+        <div class="col-xs-9">
+          <h3 class="box-title">FAQリスト一覧</h3>
+        </div>
+        <div class="col-xs-3">
+          <a href="{{ url_for('admin/bot.file_upload', id=bot.id) }}">
+            <div class="btn btn-block btn-primary">ファイルアップロード</div>
+          </a>
+        </div>
+      </div>
+    </div>
+    <!-- /.box-header -->
+    <div class="box-body">
+      <table id="faq_lists" class="table table-bordered table-striped">
+        <thead>
+          <tr>
+            <th>ID</th>
+            <th>リスト名</th>
+            <th>作成日時</th>
+            <th>更新日時</th>
+            <th>FAQ</th>
+            <th>操作</th>
+            <th>学習</th>
+          </tr>
+        </thead>
+        <tbody>
+          {% for faq_list in bot.faq_lists %}
+          <tr>
+            <td>{{ faq_list.id }}</td>
+            <td>{{ faq_list.name }}</td>
+            <td>{{ faq_list.created_at }}</td>
+            <td>{{ faq_list.updated_at }}</td>
+            <td>
+              <a href="{{ url_for('admin/faq.list', faq_list_id=faq_list.id) }}">
+                <div class="btn btn-block btn-default">FAQ一覧</div>
+              </a>
+            </td>
+            <td>
+              <a href="{{ url_for('admin/faq_list.edit', id=faq_list.id) }}">
+                <div class="btn btn-block btn-default">編集</div>
+              </a>
+            </td>
+            <td>
+              <a href="{{ url_for('admin/bot.fit', id=bot.id, faq_list_id=faq_list.id) }}">
+                <div class="btn btn-block btn-default">学習</div>
+              </a>
+            </td>
+          </tr>
+          {% endfor %}
+        </tbody>
+      </table>
+    </div>
+  </div>
+</div>
+
+<!-- static answer 一覧 -->
+<div class="col-xs-12">
+  <div class="box box-warning">
+    <div class="box-header with-border">
+      <div class="row">
+        <div class="col-xs-9">
+          <h3 class="box-title">static answer 一覧</h3>
+        </div>
+        <div class="col-xs-3">
+          <a href="{{ url_for('admin/bot/static_answer.add', bot_id=bot.id) }}">
+            <div class="btn btn-block btn-primary">追加</div>
+          </a>
+        </div>
+      </div>
+    </div>
+    <!-- /.box-header -->
+    <div class="box-body">
+      <table id="static_answers" class="table table-bordered table-striped">
+        <thead>
+          <tr>
+            <th>ID</th>
+            <th>識別子</th>
+            <th>回答</th>
+            <th>編集</th>
+          </tr>
+        </thead>
+        <tbody>
+          {% for static_answer in bot.static_answers %}
+          <tr>
+            <td>{{ static_answer.id }}</td>
+            <td>{{ static_answer.name }}</td>
+            <td>{{ static_answer.answer }}</td>
+            <td>
+              <a href="{{ url_for('admin/bot/static_answer.edit', id=static_answer.id) }}">
+                <div class="btn btn-block btn-info">編集</div>
+              </a>
+            </td>
+          </tr>
+          {% endfor %}
+        </tbody>
+      </table>
+    </div>
+  </div>
+</div>
+{% endblock %}
+
+{% block before_close_body %}
+
+<script>
+  $(function () {
+    $('#faq_lists').DataTable()
+    $('#static_answers').DataTable()
+  })
+</script>
+{% endblock %}

@@ -11,14 +11,15 @@ import numpy as np
 import math
 import pickle
 import os
+from datetime import datetime
 
 
 @celery.task()
-def fit(bot_id: int):
+def fit(bot_id: int, faq_list_id: int):
     # タスクの引数には、独自クラスのインスタンスが設定できないので
     # DB操作をここに記述
     bot = db.session.query(BotModel).get(bot_id)
-    faq_list = db.session.query(FaqListModel).get(bot.faq_list_id)
+    faq_list = db.session.query(FaqListModel).get(faq_list_id)
 
     # 学習データの前処理
     ret = {}
@@ -105,8 +106,11 @@ def fit(bot_id: int):
     with open(vars_file_path, 'wb') as fp:
         pickle.dump(vars, fp)
 
-    # bot stateを学習済みに変更
+    # bot data 更新
     bot.fitted_state = FITTED_STATE_FITTED
+    bot.fitted_faq_list_id = faq_list_id
+    bot.last_fitted_at = datetime.now()
+
     db.session.add(bot)
     db.session.commit()
 

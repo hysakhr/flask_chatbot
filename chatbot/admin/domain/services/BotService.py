@@ -24,10 +24,7 @@ class BotService:
         self.bot_repository = bot_repository
 
     def get_new_obj(self) -> BotModel:
-        return BotModel(name='', fitted_model_path='')
-
-    def get_bots_by_faq_list_id(self, faq_list_id: int) -> list:
-        return self.bot_repository.get_list_by_faq_list_id(faq_list_id)
+        return BotModel()
 
     def get_bots(self) -> list:
         return self.bot_repository.get_list()
@@ -35,19 +32,14 @@ class BotService:
     def find_by_id(self, id: int) -> BotModel:
         return self.bot_repository.find_by_id(id)
 
-    def save(self, bot: BotModel, old_bot=None):
-        # 既存のFAQリストから変更があった場合、学習状態を未学習に変更
-        if bot.id and old_bot:
-            if bot.faq_list_id != old_bot.faq_list_id:
-                bot.fitted_state = FITTED_STATE_NO_FIT
-
+    def save(self, bot: BotModel):
         return self.bot_repository.save(bot)
 
-    def fit(self, bot_id: int):
+    def fit(self, bot_id: int, faq_list_id: int):
         # bot state を学習中に変更
         bot = self.find_by_id(bot_id)
         bot.fitted_state = FITTED_STATE_FITTING
         self.save(bot)
 
         # 学習処理を非同期で行う
-        async_fit.delay(bot_id)
+        async_fit.delay(bot_id, faq_list_id)

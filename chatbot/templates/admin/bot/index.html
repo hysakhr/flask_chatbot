@@ -27,7 +27,7 @@
             <th>作成日時</th>
             <th>更新日時</th>
             <th>学習状況</th>
-            <th>学習</th>
+            <th>詳細</th>
             <th>操作</th>
             <th>有効 / 無効</th>
           </tr>
@@ -37,18 +37,14 @@
           <tr>
             <td>{{ bot.id }}</td>
             <td>{{ bot.name }}</td>
-            <td>{{ bot.faq_list.name }}</td>
+            <td>{{ bot.fitted_faq_list.name }}</td>
             <td>{{ bot.created_at }}</td>
             <td>{{ bot.updated_at }}</td>
             <td>{{ bot.fitted_state_label }}</td>
             <td>
-              {% if bot.fit_button_enable %}
-              <a href="{{ url_for('admin/bot.fit', id=bot.id) }}">
-                <div class="btn btn-block btn-success">学習</div>
+              <a href="{{ url_for('admin/bot.detail', id=bot.id) }}">
+                <div class="btn btn-block btn-info">詳細</div>
               </a>
-              {% else %}
-              <div class="btn btn-block btn-default disabled">学習</div>
-              {% endif %}
             </td>
             <td>
               <a href="{{ url_for('admin/bot.edit', id=bot.id) }}">

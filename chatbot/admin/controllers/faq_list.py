@@ -40,7 +40,7 @@ def edit(id: int, faq_list_repository: IFaqListRepository):
         if form.validate_on_submit():
             # save
             faq_service.save(faq_list)
-            return redirect(url_for('admin/faq_list'))
+            return redirect(url_for('admin/bot.detail', id=faq_list.bot.id))
     return render_template(
         'admin/faq_list/edit.html',
         faq_list=faq_list,

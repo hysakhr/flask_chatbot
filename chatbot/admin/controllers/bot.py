@@ -1,14 +1,22 @@
 import copy
+import os
 from flask import (
     Blueprint, request, render_template, redirect, url_for, current_app
 )
 
+from werkzeug.utils import secure_filename
 
 from chatbot.admin.domain.repositories.BotRepository import IBotRepository
 from chatbot.admin.domain.repositories.FaqListRepository import IFaqListRepository
+from chatbot.admin.domain.repositories.FaqRepository import IFaqRepository
+
 from chatbot.admin.domain.services.BotService import BotService
 from chatbot.admin.domain.services.FaqListService import FaqListService
+from chatbot.admin.domain.services.FaqService import FaqService
+from chatbot.admin.domain.services.FaqFileImportService import FaqFileImportService
+
 from chatbot.admin.helpers.forms.BotForm import BotForm
+from chatbot.admin.helpers.forms.FaqFileUploadForm import FaqFileUploadForm
 
 bp = Blueprint('admin/bot', __name__, url_prefix='/admin/bot')
 
@@ -21,12 +29,16 @@ def index(bot_repository: IBotRepository):
     return render_template('admin/bot/index.html', bots=bots)
 
 
+@bp.route('<int:id>/detail')
+def detail(id: int, bot_repository: IBotRepository):
+    bot_service = BotService(bot_repository)
+    bot = bot_service.find_by_id(id)
+
+    return render_template('admin/bot/detail.html', bot=bot)
+
+
 @bp.route('/add', methods=('GET', 'POST'))
-def add(faq_list_repository: IFaqListRepository,
-        bot_repository: IBotRepository):
-    # faq_lists data 取得
-    faq_list_service = FaqListService(faq_list_repository)
-    faq_lists = faq_list_service.get_faq_lists()
+def add(bot_repository: IBotRepository):
 
     bot_service = BotService(bot_repository)
     bot = bot_service.get_new_obj()
@@ -43,18 +55,13 @@ def add(faq_list_repository: IFaqListRepository,
         'admin/bot/input.html',
         form=form,
         bot=bot,
-        faq_lists=faq_lists,
         operation='追加')
 
 
 @bp.route('<int:id>/edit', methods=('GET', 'POST'))
 def edit(
         id: int,
-        faq_list_repository: IFaqListRepository,
         bot_repository: IBotRepository):
-    # faq_lists data 取得
-    faq_list_service = FaqListService(faq_list_repository)
-    faq_lists = faq_list_service.get_faq_lists()
 
     # bot data 取得
     bot_service = BotService(bot_repository)
@@ -63,52 +70,87 @@ def edit(
     if bot is None:
         return render_template('admin/404.html'), 404
 
-    faq_list = bot.faq_list
-
     form = BotForm()
 
     if request.method == 'POST':
-        # save 前に 更新前後のデータを比較するために更新前のデータを保持
-        # sqlalchemy のsession 内で「あるプラ イマリキーに対応するただ一つのオブジェクト」を保持しているため
-        # sqlalchemy経由では更新前後のインスタンスを取得できない
-        #
-        # http://omake.accense.com/static/doc-ja/sqlalchemy/session.html
-        # → セッションの役割
-        old_bot = copy.deepcopy(bot)
 
         bot.name = request.form['name']
-        bot.faq_list_id = None
         bot.enable_flag = 'enable_flag' in request.form and request.form['enable_flag'] == 'true'
 
-        # faq_list_id チェック
-        if request.form['faq_list_id']:
-            faq_list_tmp = faq_list_service.find_by_id(
-                request.form['faq_list_id'])
-            if not faq_list_tmp:
-                form.faq_list_id.errors.append('入力内容に誤りがあります。')
-            else:
-                bot.faq_list_id = int(request.form['faq_list_id'])
-
         if form.validate_on_submit():
-            bot_service.save(bot, old_bot)
-            return redirect(url_for('admin/bot'))
+            bot_service.save(bot)
+            return redirect(url_for('admin/bot.detail', id=id))
 
     return render_template(
         'admin/bot/input.html',
-        faq_list=faq_list,
-        faq_lists=faq_lists,
         form=form,
         bot=bot,
         operation='編集')
 
 
-@bp.route('<int:id>/fit')
+@bp.route('<int:id>/fit/<int:faq_list_id>')
 def fit(
         id: int,
+        faq_list_id: int,
         faq_list_repository: IFaqListRepository,
         bot_repository: IBotRepository):
     # bot data
     bot_service = BotService(bot_repository)
-    bot_service.fit(bot_id=id)
+    bot = bot_service.find_by_id(id)
 
-    return redirect(url_for('admin/bot'))
+    # faq_list data
+    faq_list_service = FaqListService(faq_list_repository)
+    faq_list = faq_list_service.find_by_id(faq_list_id)
+
+    # check exist
+    if bot is None or faq_list is None:
+        return render_template('admin/404.html'), 404
+
+    bot_service.fit(bot_id=id, faq_list_id=faq_list_id)
+
+    return redirect(url_for('admin/bot.detail', id=id))
+
+
+@bp.route('<int:id>/file_upload', methods=('GET', 'POST'))
+def file_upload(
+        id: int,
+        faq_repository: IFaqRepository,
+        faq_list_repository: IFaqListRepository,
+        bot_repository: IBotRepository):
+
+    bot_service = BotService(bot_repository)
+    bot = bot_service.find_by_id(id)
+
+    if bot is None:
+        return render_template('admin/404.html'), 404
+
+    faq_file_import_service = FaqFileImportService(
+        faq_repository=faq_repository,
+        faq_list_repository=faq_list_repository)
+    faq_file_import = faq_file_import_service.get_new_obj(bot=bot)
+    form = FaqFileUploadForm()
+
+    if request.method == 'POST':
+        faq_file_import.name = request.form['name']
+
+        current_app.logger.debug(request.form)
+        current_app.logger.debug(request.files)
+        if form.validate_on_submit():
+            # build file_path
+            file = request.files['faq_list']
+            filename = secure_filename(file.filename)
+            file_path = os.path.join(
+                current_app.config['FAQ_FILE_UPLOAD_DIR'], filename)
+            # file save
+            file.save(file_path)
+            faq_file_import.file_path = file_path
+
+            # import
+            faq_file_import_service.import_tsv(faq_file_import)
+
+            return redirect(url_for('admin/bot.detail', id=id))
+
+    return render_template(
+        'admin/faq/file_import.html',
+        faq_file_import=faq_file_import,
+        form=form)
