@@ -1,6 +1,8 @@
 from datetime import datetime
 from chatbot.database import db
-from sqlalchemy.orm import relationship
+from sqlalchemy.orm import relationship, reconstructor
+
+FIX_NAME = ['start', 'not_found']
 
 # class 定義せずに many to many 用 tableを定義
 static_answers_faqs_table = db.Table(
@@ -47,3 +49,10 @@ class StaticAnswerModel(db.Model):
         self.name = name
         self.answer = answer
         self.bot_id = bot_id
+
+    @reconstructor
+    def init_on_load(self):
+        if self.name in FIX_NAME:
+            self.is_name_fixed = True
+        else:
+            self.is_name_fixed = False

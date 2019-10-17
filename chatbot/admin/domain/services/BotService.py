@@ -5,7 +5,9 @@ from chatbot.admin.domain.repositories.BotRepository import IBotRepository
 from chatbot.models.Bot import BotModel, FITTED_STATE_FITTING, FITTED_STATE_NO_FIT
 
 from chatbot.admin.domain.repositories.FaqListRepository import IFaqListRepository
+from chatbot.admin.domain.repositories.StaticAnswerRepository import IStaticAnswerRepository
 from chatbot.models.Faq import FaqModel
+from chatbot.models.StaticAnswer import StaticAnswerModel, FIX_NAME
 from chatbot.admin.domain.tasks.bot import fit as async_fit
 
 from flask import current_app
@@ -20,8 +22,10 @@ import sys
 
 
 class BotService:
-    def __init__(self, bot_repository: IBotRepository):
+    def __init__(self, bot_repository: IBotRepository,
+                 static_answer_repository: IStaticAnswerRepository = None):
         self.bot_repository = bot_repository
+        self.static_answer_repository = static_answer_repository
 
     def get_new_obj(self) -> BotModel:
         return BotModel()
@@ -32,7 +36,16 @@ class BotService:
     def find_by_id(self, id: int) -> BotModel:
         return self.bot_repository.find_by_id(id)
 
-    def save(self, bot: BotModel):
+    def add(self, bot: BotModel):
+        self.bot_repository.save(bot)
+
+        # 必須の固定回答データを追加
+        for name in FIX_NAME:
+            static_answer = StaticAnswerModel(
+                bot_id=bot.id, name=name, answer=name)
+            self.static_answer_repository.save(static_answer)
+
+    def edit(self, bot: BotModel):
         return self.bot_repository.save(bot)
 
     def fit(self, bot_id: int, faq_list_id: int):

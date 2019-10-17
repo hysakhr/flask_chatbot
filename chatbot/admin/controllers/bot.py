@@ -9,6 +9,7 @@ from werkzeug.utils import secure_filename
 from chatbot.admin.domain.repositories.BotRepository import IBotRepository
 from chatbot.admin.domain.repositories.FaqListRepository import IFaqListRepository
 from chatbot.admin.domain.repositories.FaqRepository import IFaqRepository
+from chatbot.admin.domain.repositories.StaticAnswerRepository import IStaticAnswerRepository
 
 from chatbot.admin.domain.services.BotService import BotService
 from chatbot.admin.domain.services.FaqListService import FaqListService
@@ -38,9 +39,10 @@ def detail(id: int, bot_repository: IBotRepository):
 
 
 @bp.route('/add', methods=('GET', 'POST'))
-def add(bot_repository: IBotRepository):
+def add(bot_repository: IBotRepository,
+        static_answer_repository: IStaticAnswerRepository):
 
-    bot_service = BotService(bot_repository)
+    bot_service = BotService(bot_repository, static_answer_repository)
     bot = bot_service.get_new_obj()
     form = BotForm()
 
@@ -48,7 +50,7 @@ def add(bot_repository: IBotRepository):
         bot.name = request.form['name']
 
         if form.validate_on_submit():
-            bot_repository.save(bot)
+            bot_service.add(bot)
             return redirect(url_for('admin/bot'))
 
     return render_template(
@@ -78,7 +80,7 @@ def edit(
         bot.enable_flag = 'enable_flag' in request.form and request.form['enable_flag'] == 'true'
 
         if form.validate_on_submit():
-            bot_service.save(bot)
+            bot_service.edit(bot)
             return redirect(url_for('admin/bot.detail', id=id))
 
     return render_template(

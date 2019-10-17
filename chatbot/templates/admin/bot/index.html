@@ -46,11 +46,6 @@
                 <div class="btn btn-block btn-info">詳細</div>
               </a>
             </td>
-            <td>
-              <a href="{{ url_for('admin/bot.edit', id=bot.id) }}">
-                <div class="btn btn-block btn-info">編集</div>
-              </a>
-            </td>
             <td>{{ bot.enable_label }}</td>
           </tr>
           {% endfor %}
