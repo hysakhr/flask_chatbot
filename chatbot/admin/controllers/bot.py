@@ -133,8 +133,6 @@ def file_upload(
     if request.method == 'POST':
         faq_file_import.name = request.form['name']
 
-        current_app.logger.debug(request.form)
-        current_app.logger.debug(request.files)
         if form.validate_on_submit():
             # build file_path
             file = request.files['faq_list']

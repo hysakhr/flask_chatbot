@@ -10,7 +10,6 @@ from chatbot.admin.domain.services.FaqService import FaqService
 from chatbot.admin.domain.services.FaqListService import FaqListService
 from chatbot.admin.domain.services.FaqFileImportService import FaqFileImportService
 from chatbot.admin.helpers.forms.FaqForm import FaqForm
-from chatbot.admin.helpers.forms.FaqFileUploadForm import FaqFileUploadForm
 
 bp = Blueprint('admin/faq', __name__, url_prefix='/admin/faq')
 
