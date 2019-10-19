@@ -1,0 +1,90 @@
+{% extends 'admin/layout.html' %}
+
+{% block title %}サイトの設定{% endblock %}
+
+{% block content %}
+<div class="col-xs-12">
+  <div class="box">
+    <div class="box-header">
+      <div class="row">
+        <div class="col-xs-9">
+        </div>
+        <div class="col-xs-3">
+          <a href="{{ url_for('admin/site.add') }}">
+            <div class="btn btn-block btn-primary">サイト追加</div>
+          </a>
+        </div>
+      </div>
+    </div>
+  </div>
+  {% for site in sites %}
+  <div class="box box-default">
+    <div class="box-header with-border">
+      <div class="col-xs-2">
+        {% if site.enable_flag %}
+        <div> 有効</div>
+        {% else %}
+        <div> 無効</div>
+        {% endif %}
+      </div>
+      <div class="col-xs-7">
+        <h3 class="box-title">
+          <i class="fa fa-tag">サイト名 : {{ site.name }}</i>
+        </h3>
+      </div>
+      <div class="col-xs-3">
+        <a href="{{ url_for('admin/site.edit', id=site.id) }}">
+          <div class="btn btn-block btn-primary">編集</div>
+        </a>
+      </div>
+    </div>
+    <p class="lead">URLごとの設定</p>
+
+    <div class="box-body">
+
+      <table id="bot_lists" class="table table-bordered table-striped">
+        <thead>
+          <tr>
+            <th>ID</th>
+            <th>URLパターン</th>
+            <th>ボット名</th>
+            <th>作成日時</th>
+            <th>更新日時</th>
+            <th>操作</th>
+            <th>有効 / 無効</th>
+          </tr>
+        </thead>
+        <tbody>
+          {% for url_setting in site.url_settings %}
+          <tr>
+            <td>{{ url_setting.id }}</td>
+            <td>{{ url_setting.pattern }}</td>
+            <td>{{ url_setting.bot.name }}</td>
+            <td>{{ url_setting.created_at }}</td>
+            <td>{{ url_setting.updated_at }}</td>
+            <td>
+              <a href="{{ url_for('admin/bot.detail', id=url_setting.id) }}">
+                <div class="btn btn-block btn-info">編集</div>
+              </a>
+            </td>
+            <td>{{ url_setting.enable_label }}</td>
+          </tr>
+          {% endfor %}
+        </tbody>
+      </table>
+    </div>
+
+  </div>
+
+  {% endfor %}
+</div>
+{% endblock %}
+
+{% block before_close_body %}
+
+<script>
+  $(function () {
+    $('#bot_lists').DataTable()
+  })
+</script>
+{% endblock %}

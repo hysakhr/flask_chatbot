@@ -1,6 +1,5 @@
 from __future__ import absolute_import, division, print_function, unicode_literals
 
-import MeCab
 from chatbot.admin.domain.repositories.BotRepository import IBotRepository
 from chatbot.models.Bot import BotModel, FITTED_STATE_FITTING, FITTED_STATE_NO_FIT
 
@@ -11,14 +10,6 @@ from chatbot.models.StaticAnswer import StaticAnswerModel, FIX_NAME
 from chatbot.admin.domain.tasks.bot import fit as async_fit
 
 from flask import current_app
-
-import tensorflow as tf
-import numpy as np
-import math
-import pickle
-import os
-
-import sys
 
 
 class BotService:
