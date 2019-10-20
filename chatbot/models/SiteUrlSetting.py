@@ -25,7 +25,8 @@ class SiteUrlSettingModel(db.Model):
     bot = relationship('BotModel')
     static_answers = relationship('SiteStaticAnswerSettingModel')
 
-    def __init__(self):
+    def __init__(self, site_id: int):
+        self.site_id = site_id
         self.url_pattern = ''
         self.enable_flag = False
 

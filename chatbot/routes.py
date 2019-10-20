@@ -37,16 +37,23 @@ def routes_setting(app: Flask):
     app.register_blueprint(admin_faq.bp)
     app.add_url_rule('/admin/faq', endpoint='admin/faq')
 
+    # bot
     from chatbot.admin.controllers import bot as admin_bot
     app.register_blueprint(admin_bot.bp)
     app.add_url_rule('/admin/bot', endpoint='admin/bot')
 
+    # static answer
     from chatbot.admin.controllers import static_answer as admin_static_answer
     app.register_blueprint(admin_static_answer.bp)
     app.add_url_rule(
         '/admin/bot/static_answer',
         endpoint='admin/bot/static_answer')
 
+    # site
     from chatbot.admin.controllers import site as admin_site
     app.register_blueprint(admin_site.bp)
     app.add_url_rule('/admin/site', endpoint='admin/site')
+
+    from chatbot.admin.controllers import site_url_setting as admin_site_url_setting
+    app.register_blueprint(admin_site_url_setting.bp)
+    app.add_url_rule('/admin/site', endpoint='admin/site/url_setting')

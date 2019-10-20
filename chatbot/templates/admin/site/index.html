@@ -38,9 +38,20 @@
         </a>
       </div>
     </div>
-    <p class="lead">URLごとの設定</p>
+
 
     <div class="box-body">
+      <div>
+        <div class="col-xs-9">
+          <p class="lead">URLごとの設定</p>
+        </div>
+        <div class="col-xs-3">
+          <a href="{{ url_for('admin/site/url_setting.add', site_id=site.id) }}">
+            <div class="btn btn-block btn-primary">URL追加</div>
+          </a>
+
+        </div>
+      </div>
 
       <table id="bot_lists" class="table table-bordered table-striped">
         <thead>
@@ -58,12 +69,12 @@
           {% for url_setting in site.url_settings %}
           <tr>
             <td>{{ url_setting.id }}</td>
-            <td>{{ url_setting.pattern }}</td>
+            <td>{{ url_setting.url_pattern }}</td>
             <td>{{ url_setting.bot.name }}</td>
             <td>{{ url_setting.created_at }}</td>
             <td>{{ url_setting.updated_at }}</td>
             <td>
-              <a href="{{ url_for('admin/bot.detail', id=url_setting.id) }}">
+              <a href="{{ url_for('admin/site/url_setting.edit', id=url_setting.id) }}">
                 <div class="btn btn-block btn-info">編集</div>
               </a>
             </td>
