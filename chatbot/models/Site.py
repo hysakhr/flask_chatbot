@@ -31,3 +31,10 @@ class SiteModel(db.Model):
             self.enable_label = '有効'
         else:
             self.enable_label = '無効'
+
+        # ボットが設定されているURL（デフォルト含む）があるか
+        self.have_bot = False
+        for url_setting in self.url_settings:
+            if url_setting.bot_id:
+                self.have_bot = True
+                break
