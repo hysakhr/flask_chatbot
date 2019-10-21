@@ -1,6 +1,6 @@
 from chatbot.admin.domain.repositories.SiteUrlSettingRepository import ISiteUrlSettingRepository
 
-from chatbot.models.SiteUrlSetting import SiteUrlSettingModel
+from chatbot.models.SiteUrlSetting import SiteUrlSettingModel, URL_PATTERN_DEFALT_ID
 from chatbot.models.SiteStaticAnswerSetting import SiteStaticAnswerSettingModel
 
 
@@ -31,4 +31,8 @@ class SiteUrlSettingService:
         for site_static_answer_setting in url_setting.site_static_answer_settings:
             k = site_static_answer_setting.key
             site_static_answer_setting.static_answer_name = static_answers[k]
+
+        if not url_setting.url_pattern_editable:
+            url_setting.url_pattern = URL_PATTERN_DEFALT_ID
+
         return self.site_url_setting_repository.save(url_setting)

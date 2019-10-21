@@ -37,8 +37,6 @@ class SiteUrlSettingModel(db.Model):
 
     @reconstructor
     def init_on_load(self):
-        import sys
-        print('site_url_setting init_on_load', file=sys.stdout, flush=True)
         # 有効無効のラベル
         if self.enable_flag:
             self.enable_label = '有効'
@@ -48,6 +46,9 @@ class SiteUrlSettingModel(db.Model):
         # デフォルトの書き換え
         if self.url_pattern == URL_PATTERN_DEFALT_ID:
             self.url_pattern = 'サイトのデフォルト'
+            self.url_pattern_editable = False
+        else:
+            self.url_pattern_editable = True
 
         # 固定回答
         self.static_answers = {}

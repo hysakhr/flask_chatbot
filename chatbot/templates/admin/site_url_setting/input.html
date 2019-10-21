@@ -23,7 +23,8 @@
 
           <div class="col-sm-10">
             <input type="text" name="url_pattern" class="form-control" id="url_pattern" placeholder="URLパターン(正規表現OK)"
-              value="{{ site_url_setting.url_pattern }}" required>
+              value="{{ site_url_setting.url_pattern }}"
+              {% if site_url_setting.url_pattern_editable == False %}readonly{% endif %} required>
             {% for error in form.url_pattern.errors %}
             <div class="text-danger">{{ error }}</div>
             {% endfor %}
