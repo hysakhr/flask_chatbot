@@ -14,9 +14,8 @@ class SiteStaticAnswerSettingModel(db.Model):
         db.ForeignKey('site_url_settings.id'),
         nullable=False)
     key = db.Column(db.Text, nullable=False)
-    static_answer_id = db.Column(
-        db.Integer,
-        db.ForeignKey('static_answers.id'),
+    static_answer_name = db.Column(
+        db.Text,
         nullable=False)
     enable_flag = db.Column(db.Boolean, nullable=False, default=False)
     created_at = db.Column(db.DateTime, nullable=False, default=datetime.now)
@@ -26,11 +25,14 @@ class SiteStaticAnswerSettingModel(db.Model):
         default=datetime.now,
         onupdate=datetime.now)
 
-    site_url = relationship('SiteUrlSettingModel')
-    static_answer = relationship('StaticAnswerModel')
+    site_url_setting = relationship(
+        'SiteUrlSettingModel',
+        back_populates='site_static_answer_settings')
 
-    def __init__(self):
-        self.url_pattern = ''
+    def __init__(self, site_url_id: int, key: str, static_answer_name: str):
+        self.site_url_id = site_url_id
+        self.key = key
+        self.static_answer_name = static_answer_name
         self.enable_flag = False
 
     @reconstructor

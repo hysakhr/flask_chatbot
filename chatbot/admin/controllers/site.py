@@ -6,6 +6,7 @@ from chatbot.admin.domain.repositories.SiteRepository import ISiteRepository
 from chatbot.admin.domain.services.SiteService import SiteService
 from chatbot.admin.helpers.forms.SiteForm import SiteForm
 
+from chatbot.admin.domain.repositories.SiteUrlSettingRepository import ISiteUrlSettingRepository
 
 bp = Blueprint('admin/site', __name__, url_prefix='/admin/site')
 
@@ -19,7 +20,8 @@ def index(site_repository: ISiteRepository):
 
 
 @bp.route('/add', methods=('GET', 'POST'))
-def add(site_repository: ISiteRepository):
+def add(site_repository: ISiteRepository,
+        site_url_setting_repository: ISiteUrlSettingRepository):
     site_service = SiteService(site_repository)
     site = site_service.get_new_obj()
 

@@ -42,6 +42,28 @@
           </div>
         </div>
         <div class="form-group">
+          <label for="static_answer_start" class="col-sm-2 control-label">開始時の固定回答</label>
+
+          <div class="col-sm-10">
+            <input type="text" name="static_answer_start" class="form-control" id="static_answer_start"
+              placeholder="開始時の固定回答" value="{{ static_answers['start'] }}" required>
+            {% for error in form.static_answer_start.errors %}
+            <div class="text-danger">{{ error }}</div>
+            {% endfor %}
+          </div>
+        </div>
+        <div class="form-group">
+          <label for="static_answer_not_found" class="col-sm-2 control-label">FAQが見つからない場合の固定回答</label>
+
+          <div class="col-sm-10">
+            <input type="text" name="static_answer_not_found" class="form-control" id="static_answer_not_found"
+              placeholder="FAQが見つからない場合の固定回答" value="{{ static_answers['not_found'] }}" required>
+            {% for error in form.static_answer_not_found.errors %}
+            <div class="text-danger">{{ error }}</div>
+            {% endfor %}
+          </div>
+        </div>
+        <div class="form-group">
           <label for="enable_flag" class="col-sm-2 control-label">有効・無効</label>
 
           <div class="col-sm-10">

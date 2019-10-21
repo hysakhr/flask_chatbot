@@ -5,6 +5,9 @@ from sqlalchemy.orm import relationship, reconstructor
 from chatbot.models.Bot import BotModel
 from chatbot.models.SiteStaticAnswerSetting import SiteStaticAnswerSettingModel
 
+URL_PATTERN_DEFALT_ID = '**default**'
+STATIC_ANSWER_NAMES = ['start', 'not_found']
+
 
 class SiteUrlSettingModel(db.Model):
     __tablename__ = 'site_url_settings'
@@ -23,7 +26,9 @@ class SiteUrlSettingModel(db.Model):
 
     site = relationship('SiteModel', back_populates='url_settings')
     bot = relationship('BotModel')
-    static_answers = relationship('SiteStaticAnswerSettingModel')
+    site_static_answer_settings = relationship(
+        'SiteStaticAnswerSettingModel',
+        back_populates='site_url_setting')
 
     def __init__(self, site_id: int):
         self.site_id = site_id
@@ -32,8 +37,21 @@ class SiteUrlSettingModel(db.Model):
 
     @reconstructor
     def init_on_load(self):
+        import sys
+        print('site_url_setting init_on_load', file=sys.stdout, flush=True)
         # 有効無効のラベル
         if self.enable_flag:
             self.enable_label = '有効'
         else:
             self.enable_label = '無効'
+
+        # デフォルトの書き換え
+        if self.url_pattern == URL_PATTERN_DEFALT_ID:
+            self.url_pattern = 'サイトのデフォルト'
+
+        # 固定回答
+        self.static_answers = {}
+        for static_answer_setting in self.site_static_answer_settings:
+            key = static_answer_setting.key
+            name = static_answer_setting.static_answer_name
+            self.static_answers[key] = name

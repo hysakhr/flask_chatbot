@@ -6,7 +6,7 @@ from chatbot.models.Bot import BotModel, FITTED_STATE_FITTING, FITTED_STATE_NO_F
 from chatbot.admin.domain.repositories.FaqListRepository import IFaqListRepository
 from chatbot.admin.domain.repositories.StaticAnswerRepository import IStaticAnswerRepository
 from chatbot.models.Faq import FaqModel
-from chatbot.models.StaticAnswer import StaticAnswerModel, FIX_NAME
+from chatbot.models.StaticAnswer import StaticAnswerModel, FIX_NAMES
 from chatbot.admin.domain.tasks.bot import fit as async_fit
 
 from flask import current_app
@@ -31,7 +31,7 @@ class BotService:
         self.bot_repository.save(bot)
 
         # 必須の固定回答データを追加
-        for name in FIX_NAME:
+        for name in FIX_NAMES:
             static_answer = StaticAnswerModel(
                 bot_id=bot.id, name=name, answer=name)
             self.static_answer_repository.save(static_answer)
