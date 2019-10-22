@@ -13,6 +13,8 @@ import pickle
 import os
 from datetime import datetime
 
+from chatbot.common.Talk import parse, create_input, get_tf_checkpoint_path, get_vars_file_path
+
 
 @celery.task()
 def fit(bot_id: int, faq_list_id: int):
@@ -61,10 +63,9 @@ def fit(bot_id: int, faq_list_id: int):
         'labels': []
     }
     for index, faq_info in enumerate(faq_info_list):
-        input = [0] * len(id_to_word)
-        for word in faq_info['word_set']:
-            id = word_to_id[word]
-            input[id] = 1
+        input = create_input(
+            word_to_id=word_to_id,
+            word_set=faq_info['word_set'])
         label = [index]
 
         data['inputs'].append(input)
@@ -86,13 +87,9 @@ def fit(bot_id: int, faq_list_id: int):
         loss='sparse_categorical_crossentropy',
         metrics=['accuracy'])
 
-    # 変数保存先ディレクトリ
-    bot_vars_dir = os.path.join(
-        current_app.config['ML_VARS_DIR'], str(bot_id))
-
     # tensorflow model 保存用チェックポイントコールバック
     # 学習後に作成した model を保存する設定
-    checkpoint_path = os.path.join(bot_vars_dir, 'cp.ckpt')
+    checkpoint_path = get_tf_checkpoint_path(bot_id)
     cp_callback = tf.keras.callbacks.ModelCheckpoint(
         checkpoint_path, save_weights_only=True, verbose=1)
 
@@ -100,8 +97,8 @@ def fit(bot_id: int, faq_list_id: int):
     model.fit(x, y, epochs=400, callbacks=[cp_callback])
     model.evaluate(x, y)
 
-    # id_to_word, word_to_id の保存
-    vars_file_path = os.path.join(bot_vars_dir, 'vars.pkl')
+    # id_to_word, word_to_id の保存``
+    vars_file_path = get_vars_file_path(bot_id)
 
     with open(vars_file_path, 'wb') as fp:
         pickle.dump(vars, fp)
@@ -117,44 +114,44 @@ def fit(bot_id: int, faq_list_id: int):
     return True
 
 
-# mecab = MeCab.Tagger(
-    # '-d /usr/lib/x86_64-linux-gnu/mecab/dic/mecab-ipadic-neologd')
-mecab = MeCab.Tagger("-F %s %S %L %m %M")
-# mecab = MeCab.Tagger("-Odump")
+# # mecab = MeCab.Tagger(
+#     # '-d /usr/lib/x86_64-linux-gnu/mecab/dic/mecab-ipadic-neologd')
+# mecab = MeCab.Tagger("-F %s %S %L %m %M")
+# # mecab = MeCab.Tagger("-Odump")
 
-# MeCab はAPI側でも使用するので、共通で使える状態にしておきたい
+# # MeCab はAPI側でも使用するので、共通で使える状態にしておきたい
 
 
-def parse(text: str):
-    mecab.parse('')
-    node = mecab.parseToNode(text)
-    ret = []
-    word_set = set()
+# def parse(text: str):
+#     mecab.parse('')
+#     node = mecab.parseToNode(text)
+#     ret = []
+#     word_set = set()
 
-    while node:
-        words = []
-        features = node.feature.split(',')
-        kind = features[0]
-        if kind == '名詞':
-            words.append(node.surface)
-        elif kind in ('動詞', '形容詞'):
-            # words.append(node.surface)
-            words.append(features[6])
-        elif kind == '助動詞' and len(features[6]) > 1:
-            words.append(features[6])
+#     while node:
+#         words = []
+#         features = node.feature.split(',')
+#         kind = features[0]
+#         if kind == '名詞':
+#             words.append(node.surface)
+#         elif kind in ('動詞', '形容詞'):
+#             # words.append(node.surface)
+#             words.append(features[6])
+#         elif kind == '助動詞' and len(features[6]) > 1:
+#             words.append(features[6])
 
-        info = {
-            'surface': node.surface,
-            'feature': node.feature,
-            'words': words
-        }
-        ret.append(info)
-        node = node.next
+#         info = {
+#             'surface': node.surface,
+#             'feature': node.feature,
+#             'words': words
+#         }
+#         ret.append(info)
+#         node = node.next
 
-        if words:
-            word_set = word_set | set(words)
+#         if words:
+#             word_set = word_set | set(words)
 
-    return ret, word_set
+#     return ret, word_set
 
 
 def preprosess():
