@@ -43,7 +43,7 @@ class BotService:
         # bot state を学習中に変更
         bot = self.find_by_id(bot_id)
         bot.fitted_state = FITTED_STATE_FITTING
-        self.save(bot)
+        self.edit(bot)
 
         # 学習処理を非同期で行う
         async_fit.delay(bot_id, faq_list_id)
