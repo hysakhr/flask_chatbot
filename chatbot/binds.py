@@ -21,6 +21,10 @@ from chatbot.admin.infrastructure.SiteUrlSettingRepositoryImpl import SiteUrlSet
 # api
 from chatbot.api.domain.repositories.FaqRepository import IFaqRepository as IFaqRepository_api
 from chatbot.api.infrastructure.FaqRepositoryImpl import FaqRepositoryImpl as FaqRepositoryImpl_api
+from chatbot.api.domain.repositories.SiteRepository import ISiteRepository as ISiteRepository_api
+from chatbot.api.infrastructure.SiteRepositoryImpl import SiteRepositoryImpl as SiteRepositoryImpl_api
+from chatbot.api.domain.repositories.BotRepository import IBotRepository as IBotRepository_api
+from chatbot.api.infrastructure.BotRepositoryImpl import BotRepositoryImpl as BotRepositoryImpl_api
 
 
 def configure(binder):
@@ -40,3 +44,5 @@ def configure(binder):
 
     # api
     binder.bind(IFaqRepository_api, to=FaqRepositoryImpl_api, scope=request)
+    binder.bind(ISiteRepository_api, to=SiteRepositoryImpl_api, scope=request)
+    binder.bind(IBotRepository_api, to=BotRepositoryImpl_api, scope=request)

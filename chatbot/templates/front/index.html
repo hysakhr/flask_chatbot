@@ -90,6 +90,9 @@
       clickStaticAnswer: function (answer) {
         this.sendStaticAnswer(answer)
       }
+    },
+    mounted: function () {
+      this.sendStaticAnswer({ name: 'start' })
     }
   });
 </script>
@@ -137,78 +140,10 @@
       'cb-control': CbControlArea
     },
     data: {
-      talk: [
-        {
-          who: "bot",
-          staticAnswerId: 1,
-          answer: "こんにちは！<br>困ったことがあれば入力欄から送信してね",
-          questionList: [
-            {
-              qa_id: 2222,
-              question: "〇〇はありますか？"
-            },
-            {
-              qa_id: 2223,
-              question: "ログインできません"
-            }
-          ],
-          staticAnswerList: [
-            {
-              id: 1,
-              title: "start",
-              displayText: "最初の回答"
-            }
-          ]
-        },
-        {
-          who: "user",
-          displayText: "ユーザーの発言",
-          type: "freeText"
-        },
-        {
-          who: "bot",
-          answer: "こんにちは！<br>困ったことがあれば入力欄から送信してね"
-        },
-        {
-          who: "user",
-          displayText: "ユーザーの発言2",
-          type: "freeText"
-        },
-        {
-          who: "bot",
-          questionList: [
-            {
-              qa_id: 2222,
-              question: "〇〇はありますか？"
-            },
-            {
-              qa_id: 2223,
-              question: "ログインできません"
-            }
-          ]
-        },
-        {
-          who: "user",
-          displayText: "ユーザーの発言3",
-          type: "freeText"
-        },
-        {
-          who: "bot",
-          staticAnswerId: 1,
-          staticAnswerList: [
-            {
-              id: 1,
-              title: "start",
-              displayText: "最初の回答"
-            }
-          ]
-        },
-        {
-          who: "user",
-          displayText: "ユーザーの発言4",
-          type: "freeText"
-        }
-      ]
+      talk: [],
+      config: {
+        site_id: 1
+      }
     },
     delimiters: ["[[", "]]"],
     methods: {
@@ -216,8 +151,9 @@
         this.addUserRemark(question.question)
 
         axios.post('/api/talk', {
+          site_id: this.config.site_id,
           type: 'question',
-          qa_id: question.qa_id
+          faq_id: question.faq_id
         }).then(res => {
           this.addBotRemark(res.data);
         });
@@ -226,8 +162,9 @@
         this.addUserRemark(staticAnswer.displayText);
 
         axios.post('/api/talk', {
+          site_id: this.config.site_id,
           type: 'staticAnswer',
-          static_query: staticAnswer.title
+          name: staticAnswer.name
         }).then(res => {
           this.addBotRemark(res.data);
         });
@@ -241,6 +178,7 @@
         this.addUserRemark(text);
 
         axios.post('/api/talk', {
+          site_id: this.config.site_id,
           type: 'freeText',
           query: text
         }).then(res => {

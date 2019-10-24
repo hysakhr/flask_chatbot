@@ -12,9 +12,9 @@ def routes_setting(app: Flask):
     #############################
     # api
     #############################
-    from chatbot.api import index as api
-    app.register_blueprint(api.bp)
-    app.add_url_rule('/api', endpoint='api')
+    from chatbot.api.controllers import talk as api_talk
+    app.register_blueprint(api_talk.bp)
+    app.add_url_rule('/api/talk', endpoint='api/talk')
 
     #############################
     # admin

@@ -1,0 +1,84 @@
+from flask import (
+    Blueprint, request, jsonify
+)
+
+from chatbot.api.domain.repositories.FaqRepository import IFaqRepository
+from chatbot.api.domain.services.FaqService import FaqService
+from chatbot.api.domain.repositories.SiteRepository import ISiteRepository
+from chatbot.api.domain.services.SiteService import SiteService
+from chatbot.api.domain.services.TalkService import TalkService
+from chatbot.api.domain.repositories.BotRepository import IBotRepository
+from chatbot.api.domain.services.BotService import BotService
+
+from chatbot.api.helpers.responses.Talk import TalkResponse
+
+bp = Blueprint('api/talk', __name__, url_prefix='/api/talk')
+
+
+@bp.route('', methods=('POST',))
+def talk(faq_repository: IFaqRepository,
+         site_repository: ISiteRepository,
+         bot_repository: IBotRepository):
+
+    # 応答に必要な共通変数の準備
+    site_id = request.json['site_id']
+    site_service = SiteService(site_repository)
+    url_setting = site_service.find_url_setting(
+        site_id=site_id, url=request.url)
+
+    bot_service = BotService(bot_repository)
+    bot = bot_service.find_by_id(url_setting.bot_id)
+
+    faq_service = FaqService(faq_repository)
+
+    if request.json['type'] == 'freeText':
+
+        # 入力をもとに返信すべきfaq_idを決定
+        query = request.json['query']
+
+        talk_service = TalkService()
+        faq_id, top_faq_ids = talk_service.think(bot_id=bot.id, query=query)
+
+        # faq_id をもとに返信用データ作成
+
+        if faq_id:
+            faq = faq_service.find_by_id(faq_id)
+
+            # 返信
+            talk_response = TalkResponse(faq, faq.faqs)
+            res = talk_response.build_response()
+        else:
+            # 候補となるFAQの取得
+            faqs = faq_service.get_list_by_ids(top_faq_ids)
+
+            # not_found時の固定回答取得
+            static_answer = url_setting.get_static_answer(key='not_found')
+
+            # 返信
+            talk_response = TalkResponse(static_answer, faqs)
+            res = talk_response.build_response()
+
+    elif request.json['type'] == 'question':
+        # TODO: validation
+        faq_id = request.json['faq_id']
+
+        # faq_id をもとに返信用データ作成
+        faq = faq_service.find_by_id(faq_id)
+
+        # 返信
+        talk_response = TalkResponse(faq, faq.faqs)
+        res = talk_response.build_response()
+
+    elif request.json['type'] == 'staticAnswer':
+        # static_query をもとに返信用データ作成
+        name = request.json['name']
+        static_answer = bot.get_static_answer(name)
+
+        # 返信
+        talk_response = TalkResponse(static_answer)
+        res = talk_response.build_response()
+
+    else:
+        return jsonify({'error': 'type error'})
+
+    return jsonify(res)

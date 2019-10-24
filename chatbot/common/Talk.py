@@ -1,7 +1,9 @@
 
 import os
+import pickle
 import MeCab
 from flask import current_app
+import tensorflow as tf
 
 # mecab = MeCab.Tagger(
 # '-d /usr/lib/x86_64-linux-gnu/mecab/dic/mecab-ipadic-neologd')
@@ -62,3 +64,33 @@ def get_tf_checkpoint_path(bot_id: int):
 
 def get_vars_file_path(bot_id: int):
     return os.path.join(get_bot_vars_dir(bot_id), 'vars.pkl')
+
+
+def get_bot_model_path(bot_id):
+    return os.path.join(get_bot_vars_dir(bot_id), 'bot_model.h5')
+
+
+def save_ml_vars(bot_id: int, vars):
+    vars_file_path = get_vars_file_path(bot_id)
+
+    with open(vars_file_path, 'wb') as fp:
+        pickle.dump(vars, fp)
+
+
+def get_ml_vars(bot_id: int):
+    vars_file_path = get_vars_file_path(bot_id)
+
+    with open(vars_file_path, 'rb') as fp:
+        vars = pickle.load(fp)
+    return vars
+
+
+def save_ml_model(bot_id: int, model):
+    bot_model_path = get_bot_model_path(bot_id)
+
+    model.save(bot_model_path)
+
+
+def get_ml_model(bot_id: int):
+    bot_model_path = get_bot_model_path(bot_id)
+    return tf.keras.models.load_model(bot_model_path)

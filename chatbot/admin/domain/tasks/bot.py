@@ -13,7 +13,7 @@ import pickle
 import os
 from datetime import datetime
 
-from chatbot.common.Talk import parse, create_input, get_tf_checkpoint_path, get_vars_file_path
+from chatbot.common.Talk import parse, create_input, get_tf_checkpoint_path, save_ml_vars, save_ml_model
 
 
 @celery.task()
@@ -30,6 +30,7 @@ def fit(bot_id: int, faq_list_id: int):
     for faq in faq_list.faqs:
         info, word_set = parse(faq.question)
         faq_info_list.append({
+            'faq_id': faq.id,
             'question': faq.question,
             'info': info,
             'word_set': word_set
@@ -47,11 +48,6 @@ def fit(bot_id: int, faq_list_id: int):
 
     ret['id_to_word'] = id_to_word
     ret['word_to_id'] = word_to_id
-
-    vars = {
-        'id_to_word': id_to_word,
-        'word_to_id': word_to_id
-    }
 
     input_dim = len(words)
     middle_layer = math.floor(len(words) * 0.2)
@@ -95,13 +91,19 @@ def fit(bot_id: int, faq_list_id: int):
 
     # 学習
     model.fit(x, y, epochs=400, callbacks=[cp_callback])
-    model.evaluate(x, y)
+    # model.save('my_model.h5')
 
-    # id_to_word, word_to_id の保存``
-    vars_file_path = get_vars_file_path(bot_id)
+    loss, acc = model.evaluate(x, y)
 
-    with open(vars_file_path, 'wb') as fp:
-        pickle.dump(vars, fp)
+    # 変数とモデルの保存``
+    vars = {
+        'id_to_word': id_to_word,
+        'word_to_id': word_to_id,
+        'faq_info_list': faq_info_list
+    }
+
+    save_ml_vars(bot_id, vars)
+    save_ml_model(bot_id=bot_id, model=model)
 
     # bot data 更新
     bot.fitted_state = FITTED_STATE_FITTED
@@ -112,48 +114,3 @@ def fit(bot_id: int, faq_list_id: int):
     db.session.commit()
 
     return True
-
-
-# # mecab = MeCab.Tagger(
-#     # '-d /usr/lib/x86_64-linux-gnu/mecab/dic/mecab-ipadic-neologd')
-# mecab = MeCab.Tagger("-F %s %S %L %m %M")
-# # mecab = MeCab.Tagger("-Odump")
-
-# # MeCab はAPI側でも使用するので、共通で使える状態にしておきたい
-
-
-# def parse(text: str):
-#     mecab.parse('')
-#     node = mecab.parseToNode(text)
-#     ret = []
-#     word_set = set()
-
-#     while node:
-#         words = []
-#         features = node.feature.split(',')
-#         kind = features[0]
-#         if kind == '名詞':
-#             words.append(node.surface)
-#         elif kind in ('動詞', '形容詞'):
-#             # words.append(node.surface)
-#             words.append(features[6])
-#         elif kind == '助動詞' and len(features[6]) > 1:
-#             words.append(features[6])
-
-#         info = {
-#             'surface': node.surface,
-#             'feature': node.feature,
-#             'words': words
-#         }
-#         ret.append(info)
-#         node = node.next
-
-#         if words:
-#             word_set = word_set | set(words)
-
-#     return ret, word_set
-
-
-def preprosess():
-    # 事前処理をまとめたい
-    pass
