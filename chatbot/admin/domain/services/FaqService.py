@@ -20,5 +20,9 @@ class FaqService:
     def find_by_id(self, id: int) -> FaqModel:
         return self.faq_repository.find_by_id(id)
 
+    def find_by_question(self, question: str, faq_list_id: int):
+        return self.faq_repository.find_by_question(
+            question=question, faq_list_id=faq_list_id)
+
     def save(self, faq: FaqModel):
         return self.faq_repository.save(faq)

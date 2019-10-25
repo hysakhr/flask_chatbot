@@ -60,6 +60,16 @@ def add(
         faq.answer = request.form['answer']
         faq.question = request.form['question']
         faq.enable_flag = 'enable_flag' in request.form and request.form['enable_flag'] == 'true'
+        faq.related_faqs = []
+
+        # 関連FAQを取得し設定
+        if 'related_faqs[]' in request.form:
+            related_faqs = []
+            for question in request.form.getlist('related_faqs[]'):
+                related_faq = faq_service.find_by_question(
+                    question=question, faq_list_id=faq.faq_list_id)
+                related_faqs.append(related_faq)
+            faq.related_faqs = related_faqs
 
         if form.validate_on_submit():
             faq_service.save(faq)
@@ -94,6 +104,16 @@ def edit(
         faq.answer = request.form['answer']
         faq.question = request.form['question']
         faq.enable_flag = 'enable_flag' in request.form and request.form['enable_flag'] == 'true'
+        faq.related_faqs = []
+
+        # 関連FAQを取得し設定
+        if 'related_faqs[]' in request.form:
+            related_faqs = []
+            for question in request.form.getlist('related_faqs[]'):
+                related_faq = faq_service.find_by_question(
+                    question=question, faq_list_id=faq.faq_list_id)
+                related_faqs.append(related_faq)
+            faq.related_faqs = related_faqs
 
         if form.validate_on_submit():
             faq_service.save(faq)

@@ -45,7 +45,7 @@ def talk(faq_repository: IFaqRepository,
             faq = faq_service.find_by_id(faq_id)
 
             # 返信
-            talk_response = TalkResponse(faq, faq.faqs)
+            talk_response = TalkResponse(faq, faq.related_faqs)
             res = talk_response.build_response()
         else:
             # 候補となるFAQの取得
@@ -66,7 +66,7 @@ def talk(faq_repository: IFaqRepository,
         faq = faq_service.find_by_id(faq_id)
 
         # 返信
-        talk_response = TalkResponse(faq, faq.faqs)
+        talk_response = TalkResponse(faq, faq.related_faqs)
         res = talk_response.build_response()
 
     elif request.json['type'] == 'staticAnswer':
@@ -75,7 +75,7 @@ def talk(faq_repository: IFaqRepository,
         static_answer = bot.get_static_answer(name)
 
         # 返信
-        talk_response = TalkResponse(static_answer)
+        talk_response = TalkResponse(static_answer, static_answer.related_faqs)
         res = talk_response.build_response()
 
     else:

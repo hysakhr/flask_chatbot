@@ -10,14 +10,18 @@ from sqlalchemy.orm import relationship
 faqs_faqs_table = db.Table(
     'faqs_faqs',
     db.Column(
-        'from_faq_id',
+        'faq_id',
         db.Integer,
         db.ForeignKey('faqs.id'),
         primary_key=True),
     db.Column(
-        'to_faq_id',
+        'faq_list_id',
         db.Integer,
-        db.ForeignKey('faqs.id'),
+        db.ForeignKey('faq_lists.id'),
+        primary_key=True),
+    db.Column(
+        'question',
+        db.Text,
         primary_key=True))
 
 
@@ -43,11 +47,11 @@ class FaqModel(db.Model):
 
     faq_list = relationship('FaqListModel', back_populates='faqs')
 
-    faqs = relationship(
+    related_faqs = relationship(
         'FaqModel',
         secondary=faqs_faqs_table,
-        primaryjoin=id == faqs_faqs_table.c.from_faq_id,
-        secondaryjoin=id == faqs_faqs_table.c.to_faq_id)
+        primaryjoin=id == faqs_faqs_table.c.faq_id,
+        secondaryjoin='and_(faqs_faqs.c.faq_list_id==FaqModel.faq_list_id, faqs_faqs.c.question==FaqModel.question)')
 
     def __init__(
             self,

@@ -12,5 +12,9 @@ class IFaqRepository(metaclass=ABCMeta):
         pass
 
     @abstractclassmethod
+    def find_by_question(self, question: str, faq_list_id: int):
+        pass
+
+    @abstractclassmethod
     def save(self, faq: FaqModel):
         pass

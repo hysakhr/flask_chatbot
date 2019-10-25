@@ -51,6 +51,40 @@
           </div>
         </div>
         <div class="form-group">
+          <label for="enable_flag" class="col-sm-2 control-label">関連FAQ</label>
+
+          <div class="col-sm-10">
+            <div class="box-solid">
+              <div class="box-header">
+                <div class="row">
+                  <div class="col-xs-9"></div>
+                  <div class="col-xs-3">
+                    <button type="button" class="btn btn-block btn-primary" data-toggle="modal"
+                      data-target="#modal-default">追加</button>
+                  </div>
+                </div>
+              </div>
+              <div class="box-body">
+                <table id="related_faqs" class="table table-bordered">
+                  <tbody>
+                    {% for faq in faq.related_faqs %}
+                    <tr>
+                      <td><input type="text" name="related_faqs[]" class="form-control" value="{{faq.question }}"
+                          readonly></td>
+                      <td>
+                        <div class="btn btn-block btn-danger delete_related_faqs">削除</div>
+                      </td>
+                    </tr>
+                    {% endfor %}
+                  </tbody>
+
+                </table>
+              </div>
+            </div>
+
+          </div>
+        </div>
+        <div class="form-group">
           <label for="enable_flag" class="col-sm-2 control-label">有効・無効</label>
 
           <div class="col-sm-10">
@@ -87,7 +121,60 @@
   <!-- /.box -->
 </div>
 <!-- /.col -->
+
+
+<div class="modal fade" id="modal-default">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span></button>
+        <h4 class="modal-title">関連FAQの選択</h4>
+      </div>
+      <div class="modal-body">
+        <table id="faq_search" class="table table-bordered table-striped">
+          <thead>
+            <tr>
+              <th>ID</th>
+              <th>質問</th>
+              <th>操作</th>
+            </tr>
+          </thead>
+          <tbody>
+            {% for faq in faq_list.faqs %}
+            <tr>
+              <td>{{ faq.id }}</td>
+              <td>{{ faq.question }}</td>
+              <td><button type="button" class="btn btn-block btn-success add_related_faq"
+                  data-question="{{ faq.question }}" data-dismiss="modal">追加</button></td>
+            </tr>
+            {% endfor %}
+          </tbody>
+        </table>
+      </div>
+    </div>
+    <!-- /.modal-content -->
+  </div>
+  <!-- /.modal-dialog -->
+</div>
+<!-- /.modal -->
 {% endblock %}
 
 {% block before_close_body %}
+<script>
+  $(function () {
+    faq_search_table = $('#faq_search').DataTable()
+    $('#faq_search').on('click', '.add_related_faq', function () {
+      add_related_faq($(this).data('question'))
+      faq_search_table.close()
+    })
+    $('#related_faqs').on('click', '.delete_related_faqs', function () {
+      $(this).parent().parent().remove()
+    })
+  })
+
+  function add_related_faq(question) {
+    $('#related_faqs tbody').append('<tr><td><input type="text" name="related_faqs[]" class="form-control" value="' + question + '" readonly></td><td><div class="btn btn-block btn-danger delete_related_faqs">削除</div></td></tr>');
+  }
+</script>
 {% endblock %}
