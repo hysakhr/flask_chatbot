@@ -45,7 +45,9 @@ class FaqModel(db.Model):
         default=datetime.now,
         onupdate=datetime.now)
 
-    faq_list = relationship('FaqListModel', back_populates='faqs')
+    faq_list = relationship(
+        'FaqListModel',
+        back_populates='faqs', foreign_keys=[faq_list_id])
 
     related_faqs = relationship(
         'FaqModel',

@@ -1,0 +1,145 @@
+{% extends 'admin/layout.html' %}
+
+{% block title %}FAQリストの編集{% endblock %}
+
+{% block content %}
+
+<div class="col-md-12">
+  <!-- Horizontal Form -->
+  <div class="box box-info">
+    <div class="box-header with-border">
+      <h3 class="box-title">FAQリストの情報</h3>
+    </div>
+    <!-- /.box-header -->
+    <!-- form start -->
+    <form class="form-horizontal" method="POST">
+      {{ form.hidden_tag() }}
+      <div class="box-body">
+        <div class="form-group">
+          <label class="col-sm-2 control-label">ID</label>
+
+          <div class="col-sm-10">
+            <input type="text" class="form-control" value="{{faq_list['id'] }}" disabled>
+          </div>
+        </div>
+        <div class="form-group">
+          <label for="name" class="col-sm-2 control-label">名前</label>
+
+          <div class="col-sm-10">
+            <input type="text" name="name" class="form-control" id="name" placeholder="名前"
+              value="{{ faq_list['name'] }}" required>
+            {% for error in form.name.errors %}
+            <div class="text-danger">{{ error }}</div>
+            {% endfor %}
+          </div>
+        </div>
+        <div class="form-group">
+          <label for="start_faq_id" class="col-sm-2 control-label">開始時に表示するFAQ</label>
+
+          <div class="col-sm-10">
+            <div class="col-sm-9 no-padding">
+              <input type="text" name="start_faq_question" id="start_faq_question" class="form-control"
+                value="{{ faq_list.start_faq.question }}" readonly>
+              <input type="hidden" name="start_faq_id" id="start_faq_id" value="{{ faq_list.start_faq.id }}">
+            </div>
+            <div class="col-sm-3">
+              <div class="btn btn-block btn-primary" data-toggle="modal" data-target="#modal-default"
+                onclick="select_faq('start_faq')">
+                選択</div>
+            </div>
+            {% for error in form.start_faq_id.errors %}
+            <div class="text-danger">{{ error }}</div>
+            {% endfor %}
+          </div>
+        </div>
+        <div class="form-group">
+          <label for="not_found_faq_id" class="col-sm-2 control-label">見つからない場合に表示するFAQ</label>
+
+          <div class="col-sm-10">
+            <div class="col-sm-9 no-padding">
+              <input type="text" name="not_found_faq_question" id="not_found_faq_question" class="form-control"
+                value="{{ faq_list.not_found_faq.question }}" readonly>
+              <input type="hidden" name="not_found_faq_id" id="not_found_faq_id"
+                value="{{ faq_list.not_found_faq.id }}">
+            </div>
+            <div class="col-sm-3">
+              <div class="btn btn-block btn-primary" data-toggle="modal" data-target="#modal-default"
+                onclick="select_faq('not_found_faq')">
+                選択</div>
+            </div>
+            {% for error in form.not_found_faq_id.errors %}
+            <div class="text-danger">{{ error }}</div>
+            {% endfor %}
+          </div>
+        </div>
+      </div>
+      <!-- /.box-body -->
+      <div class="box-footer">
+        <button type="submit" class="btn btn-info pull-right">送信</button>
+      </div>
+      <!-- /.box-footer -->
+    </form>
+  </div>
+  <!-- /.box -->
+</div>
+<!-- /.col -->
+
+<div class="modal fade" id="modal-default">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span></button>
+        <h4 class="modal-title">FAQの選択</h4>
+      </div>
+      <div class="modal-body">
+        <table id="faq_search" class="table table-bordered table-striped">
+          <thead>
+            <tr>
+              <th>ID</th>
+              <th>質問</th>
+              <th>操作</th>
+            </tr>
+          </thead>
+          <tbody>
+            {% for faq in faq_list.faqs %}
+            <tr>
+              <td>{{ faq.id }}</td>
+              <td>{{ faq.question }}</td>
+              <td><button type="button" class="btn btn-block btn-success select_faq" data-faq_id="{{ faq.id }}"
+                  data-question="{{ faq.question }}" data-dismiss="modal">選択</button></td>
+            </tr>
+            {% endfor %}
+          </tbody>
+        </table>
+      </div>
+    </div>
+    <!-- /.modal-content -->
+  </div>
+  <!-- /.modal-dialog -->
+</div>
+{% endblock %}
+
+{% block before_close_body %}
+<script>
+  $(function () {
+    let select_faq_target = ''
+
+    faq_search_table = $('#faq_search').DataTable()
+    $('#faq_search').on('click', '.select_faq', function () {
+      const faq_id = $(this).data('faq_id')
+      const question = $(this).data('question')
+      set_faq(faq_id, question)
+    })
+  })
+
+  function select_faq(target) {
+    select_faq_target = target;
+  }
+
+  function set_faq(faq_id, question) {
+    $('#' + select_faq_target + '_id').val(faq_id)
+    $('#' + select_faq_target + '_question').val(question)
+  }
+</script>
+{% endblock %}
