@@ -9,7 +9,6 @@ from werkzeug.utils import secure_filename
 from chatbot.admin.domain.repositories.BotRepository import IBotRepository
 from chatbot.admin.domain.repositories.FaqListRepository import IFaqListRepository
 from chatbot.admin.domain.repositories.FaqRepository import IFaqRepository
-from chatbot.admin.domain.repositories.StaticAnswerRepository import IStaticAnswerRepository
 
 from chatbot.admin.domain.services.BotService import BotService
 from chatbot.admin.domain.services.FaqListService import FaqListService
@@ -39,10 +38,9 @@ def detail(id: int, bot_repository: IBotRepository):
 
 
 @bp.route('/add', methods=('GET', 'POST'))
-def add(bot_repository: IBotRepository,
-        static_answer_repository: IStaticAnswerRepository):
+def add(bot_repository: IBotRepository):
 
-    bot_service = BotService(bot_repository, static_answer_repository)
+    bot_service = BotService(bot_repository)
     bot = bot_service.get_new_obj()
     form = BotForm()
 
@@ -95,13 +93,14 @@ def fit(
         id: int,
         faq_list_id: int,
         faq_list_repository: IFaqListRepository,
-        bot_repository: IBotRepository):
+        bot_repository: IBotRepository,
+        faq_repository: IFaqRepository):
     # bot data
     bot_service = BotService(bot_repository)
     bot = bot_service.find_by_id(id)
 
     # faq_list data
-    faq_list_service = FaqListService(faq_list_repository)
+    faq_list_service = FaqListService(faq_list_repository, faq_repository)
     faq_list = faq_list_service.find_by_id(faq_list_id)
 
     # check exist

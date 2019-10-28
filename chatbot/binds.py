@@ -10,8 +10,6 @@ from chatbot.admin.domain.repositories.FaqRepository import IFaqRepository
 from chatbot.admin.infrastructure.FaqRepositoryImpl import FaqRepositoryImpl
 from chatbot.admin.domain.repositories.BotRepository import IBotRepository
 from chatbot.admin.infrastructure.BotRepositoryImpl import BotRepositoryImpl
-from chatbot.admin.domain.repositories.StaticAnswerRepository import IStaticAnswerRepository
-from chatbot.admin.infrastructure.StaticAnswerRepositoryImpl import StaticAnswerRepositoryImpl
 
 from chatbot.admin.domain.repositories.SiteRepository import ISiteRepository
 from chatbot.admin.infrastructure.SiteRepositoryImpl import SiteRepositoryImpl
@@ -32,10 +30,6 @@ def configure(binder):
     binder.bind(IFaqListRepository, to=FaqListRepositoryImpl, scope=request)
     binder.bind(IFaqRepository, to=FaqRepositoryImpl, scope=request)
     binder.bind(IBotRepository, to=BotRepositoryImpl, scope=request)
-    binder.bind(
-        IStaticAnswerRepository,
-        to=StaticAnswerRepositoryImpl,
-        scope=request)
     binder.bind(ISiteRepository, to=SiteRepositoryImpl, scope=request)
     binder.bind(
         ISiteUrlSettingRepository,

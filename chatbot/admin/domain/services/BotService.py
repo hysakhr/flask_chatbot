@@ -4,19 +4,15 @@ from chatbot.admin.domain.repositories.BotRepository import IBotRepository
 from chatbot.models.Bot import BotModel, FITTED_STATE_FITTING, FITTED_STATE_NO_FIT
 
 from chatbot.admin.domain.repositories.FaqListRepository import IFaqListRepository
-from chatbot.admin.domain.repositories.StaticAnswerRepository import IStaticAnswerRepository
 from chatbot.models.Faq import FaqModel
-from chatbot.models.StaticAnswer import StaticAnswerModel, FIX_NAMES
 from chatbot.admin.domain.tasks.bot import fit as async_fit
 
 from flask import current_app
 
 
 class BotService:
-    def __init__(self, bot_repository: IBotRepository,
-                 static_answer_repository: IStaticAnswerRepository = None):
+    def __init__(self, bot_repository: IBotRepository):
         self.bot_repository = bot_repository
-        self.static_answer_repository = static_answer_repository
 
     def get_new_obj(self) -> BotModel:
         return BotModel()
@@ -29,12 +25,6 @@ class BotService:
 
     def add(self, bot: BotModel):
         self.bot_repository.save(bot)
-
-        # 必須の固定回答データを追加
-        for name in FIX_NAMES:
-            static_answer = StaticAnswerModel(
-                bot_id=bot.id, name=name, answer=name)
-            self.static_answer_repository.save(static_answer)
 
     def edit(self, bot: BotModel):
         return self.bot_repository.save(bot)

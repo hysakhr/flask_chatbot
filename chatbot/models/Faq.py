@@ -12,17 +12,14 @@ faqs_faqs_table = db.Table(
     db.Column(
         'faq_id',
         db.Integer,
-        db.ForeignKey('faqs.id'),
-        primary_key=True),
+        db.ForeignKey('faqs.id')),
     db.Column(
         'faq_list_id',
         db.Integer,
-        db.ForeignKey('faq_lists.id'),
-        primary_key=True),
+        db.ForeignKey('faq_lists.id')),
     db.Column(
         'question',
-        db.Text,
-        primary_key=True))
+        db.Text))
 
 
 class FaqModel(db.Model):

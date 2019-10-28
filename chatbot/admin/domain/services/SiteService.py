@@ -3,7 +3,6 @@ from chatbot.admin.domain.repositories.SiteUrlSettingRepository import ISiteUrlS
 
 from chatbot.models.Site import SiteModel
 from chatbot.models.SiteUrlSetting import SiteUrlSettingModel, URL_PATTERN_DEFALT_ID, STATIC_ANSWER_NAMES
-from chatbot.models.SiteStaticAnswerSetting import SiteStaticAnswerSettingModel
 
 
 class SiteService:
@@ -25,13 +24,6 @@ class SiteService:
         site_url_setting = SiteUrlSettingModel(site_id=None)
         site_url_setting.url_pattern = URL_PATTERN_DEFALT_ID
         site_url_setting.site_static_answer_settings = []
-
-        # 固定回答
-        for name in STATIC_ANSWER_NAMES:
-            site_static_answer_setting = SiteStaticAnswerSettingModel(
-                site_url_id=None, key=name, static_answer_name=name)
-            site_url_setting.site_static_answer_settings.append(
-                site_static_answer_setting)
 
         site.url_settings = [site_url_setting]
 

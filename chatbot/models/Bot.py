@@ -2,11 +2,14 @@ from datetime import datetime
 from chatbot.database import db
 from sqlalchemy.orm import relationship, reconstructor
 
-from chatbot.models.StaticAnswer import StaticAnswerModel
+from chatbot.models.Faq import FaqModel
 
 FITTED_STATE_NO_FIT = 0
 FITTED_STATE_FITTING = 1
 FITTED_STATE_FITTED = 2
+
+STATIC_ANSWER_ID_START = 'start'
+STATIC_ANSWER_ID_NOT_FOUND = 'not_found'
 
 
 class BotModel(db.Model):
@@ -38,8 +41,6 @@ class BotModel(db.Model):
         'FaqListModel',
         back_populates='bot',
         lazy='joined', primaryjoin='and_(BotModel.id==FaqListModel.bot_id)')
-
-    static_answers = relationship('StaticAnswerModel', back_populates='bot')
 
     def __init__(
             self,
@@ -81,9 +82,11 @@ class BotModel(db.Model):
         if self.fitted_faq_list_id is None or self.fitted_state == FITTED_STATE_FITTING:
             self.fit_button_enable = False
 
-    def get_static_answer(self, name: str) -> StaticAnswerModel:
-        for static_answer in self.static_answers:
-            if static_answer.name == name:
-                return static_answer
+    def get_static_answer(self, name: str) -> FaqModel:
+        if name == STATIC_ANSWER_ID_START:
+            return self.fitted_faq_list.start_faq
+
+        if name == STATIC_ANSWER_ID_NOT_FOUND:
+            return self.fitted_faq_list.not_found_faq
 
         raise Exception('static_answer not found. (name:{})'.format(name))

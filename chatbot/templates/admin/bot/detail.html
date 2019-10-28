@@ -100,50 +100,6 @@
   </div>
 </div>
 
-<!-- static answer 一覧 -->
-<div class="col-xs-12">
-  <div class="box box-warning">
-    <div class="box-header with-border">
-      <div class="row">
-        <div class="col-xs-9">
-          <h3 class="box-title">固定回答 一覧</h3>
-        </div>
-        <div class="col-xs-3">
-          <a href="{{ url_for('admin/bot/static_answer.add', bot_id=bot.id) }}">
-            <div class="btn btn-block btn-primary">追加</div>
-          </a>
-        </div>
-      </div>
-    </div>
-    <!-- /.box-header -->
-    <div class="box-body">
-      <table id="static_answers" class="table table-bordered table-striped">
-        <thead>
-          <tr>
-            <th>ID</th>
-            <th>識別子</th>
-            <th>回答</th>
-            <th>編集</th>
-          </tr>
-        </thead>
-        <tbody>
-          {% for static_answer in bot.static_answers %}
-          <tr>
-            <td>{{ static_answer.id }}</td>
-            <td>{{ static_answer.name }}</td>
-            <td>{{ static_answer.answer }}</td>
-            <td>
-              <a href="{{ url_for('admin/bot/static_answer.edit', id=static_answer.id) }}">
-                <div class="btn btn-block btn-info">編集</div>
-              </a>
-            </td>
-          </tr>
-          {% endfor %}
-        </tbody>
-      </table>
-    </div>
-  </div>
-</div>
 {% endblock %}
 
 {% block before_close_body %}
@@ -151,7 +107,6 @@
 <script>
   $(function () {
     $('#faq_lists').DataTable()
-    $('#static_answers').DataTable()
   })
 </script>
 {% endblock %}

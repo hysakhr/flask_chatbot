@@ -70,7 +70,11 @@
           <tr>
             <td>{{ url_setting.id }}</td>
             <td>{{ url_setting.url_pattern }}</td>
-            <td><a href="{{ url_for('admin/bot.detail', id=url_setting.bot.id) }}">{{ url_setting.bot.name }}</a></td>
+            <td>
+              {% if url_setting.bot %}
+              <a href="{{ url_for('admin/bot.detail', id=url_setting.bot.id) }}">{{ url_setting.bot.name }}</a>
+              {% endif %}
+            </td>
             <td>{{ url_setting.created_at }}</td>
             <td>{{ url_setting.updated_at }}</td>
             <td>

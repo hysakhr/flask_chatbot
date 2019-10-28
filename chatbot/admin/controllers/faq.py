@@ -20,7 +20,7 @@ def list(
         faq_list_repository: IFaqListRepository,
         faq_repository: IFaqRepository):
     # faq_list data 取得
-    faq_list_service = FaqListService(faq_list_repository)
+    faq_list_service = FaqListService(faq_list_repository, faq_repository)
     faq_list = faq_list_service.find_by_id(id=faq_list_id)
 
     # faq data 取得
@@ -46,7 +46,7 @@ def add(
         faq_list_repository: IFaqListRepository,
         faq_repository: IFaqRepository):
     # faq_list data 取得
-    faq_list_service = FaqListService(faq_list_repository)
+    faq_list_service = FaqListService(faq_list_repository, faq_repository)
     faq_list = faq_list_service.find_by_id(id=faq_list_id)
 
     if faq_list is None:
