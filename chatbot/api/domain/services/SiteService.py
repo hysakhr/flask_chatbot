@@ -30,8 +30,14 @@ class SiteService:
     def find_url_setting(self, site_id: int, url: str) -> SiteUrlSettingModel:
         site = self.site_repository.find_by_id(id=site_id)
 
+        if site is None:
+            return None
+
         default_url_setting = None
         for url_setting in site.url_settings:
+            if url_setting.enable_flag is False:
+                continue
+
             if url_setting.url_pattern == URL_PATTERN_DEFALT_ID:
                 default_url_setting = url_setting
                 continue
@@ -39,8 +45,5 @@ class SiteService:
             result = re.match(url_setting.url_pattern, url)
             if result:
                 return url_setting
-
-        if default_url_setting is None:
-            raise Exception('url_setting not found')
 
         return default_url_setting

@@ -1,6 +1,6 @@
 from datetime import datetime
 from chatbot.database import db
-from sqlalchemy.orm import relationship
+from sqlalchemy.orm import relationship, reconstructor
 
 # class 定義せずに many to many 用 tableを定義
 # metadata は不要でした
@@ -66,3 +66,14 @@ class FaqModel(db.Model):
         self.answer_org = answer_org
         self.faq_list_id = faq_list_id
         self.enable_flag = enable_flag
+
+    @reconstructor
+    def init_on_load(self):
+        # 有効無効のラベル
+        if self.enable_flag:
+            self.enable_label = '有効'
+        else:
+            self.enable_label = '無効'
+
+    def get_enable_related_faqs(self):
+        return [faq for faq in self.related_faqs if faq.enable_flag]

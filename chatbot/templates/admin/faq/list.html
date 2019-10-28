@@ -27,6 +27,7 @@
             <th>作成日時</th>
             <th>更新日時</th>
             <th>操作</th>
+            <th>有効 / 無効</th>
           </tr>
         </thead>
         <tbody>
@@ -41,6 +42,7 @@
                 <div class="btn btn-block btn-default">編集</div>
               </a>
             </td>
+            <td>{{ faq.enable_label }}</td>
           </tr>
           {% endfor %}
         </tbody>

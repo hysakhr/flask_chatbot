@@ -1,10 +1,16 @@
 
 
 class TalkResponse():
-    def __init__(self, answer, faqs: list = None, static_answers: list = None):
+    def __init__(
+            self,
+            answer=None,
+            faqs: list = None,
+            static_answers: list = None,
+            error_message: str = ''):
         self.answer = answer
         self.faqs = faqs
         self.static_answers = static_answers
+        self.error_message = error_message
 
     def build_response(self):
         components = {}
@@ -45,3 +51,6 @@ class TalkResponse():
         return {
             'components': components
         }
+
+    def build_error_message(self):
+        return {'error': self.error_message}

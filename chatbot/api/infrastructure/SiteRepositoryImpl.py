@@ -6,4 +6,6 @@ from chatbot.database import db
 
 class SiteRepositoryImpl(ISiteRepository):
     def find_by_id(self, id: int) -> SiteModel:
-        return db.session.query(SiteModel).get(id)
+        return db.session.query(SiteModel).filter(
+            SiteModel.id == id).filter(
+            SiteModel.enable_flag).one_or_none()

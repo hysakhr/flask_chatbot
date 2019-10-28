@@ -26,8 +26,18 @@ def talk(faq_repository: IFaqRepository,
     url_setting = site_service.find_url_setting(
         site_id=site_id, url=request.url)
 
+    if url_setting is None:
+        talk_response = TalkResponse(error_message='url_setting not found.')
+        res = talk_response.build_error_message()
+        return jsonify(res), 404
+
     bot_service = BotService(bot_repository)
     bot = bot_service.find_by_id(url_setting.bot_id)
+
+    if bot is None:
+        talk_response = TalkResponse(error_message='bot not found.')
+        res = talk_response.build_error_message()
+        return jsonify(res), 404
 
     faq_service = FaqService(faq_repository)
 
@@ -59,24 +69,36 @@ def talk(faq_repository: IFaqRepository,
             res = talk_response.build_response()
 
     elif request.json['type'] == 'question':
-        # TODO: validation
         faq_id = request.json['faq_id']
 
         # faq_id をもとに返信用データ作成
         faq = faq_service.find_by_id(faq_id)
 
-        # 返信
-        talk_response = TalkResponse(faq, faq.related_faqs)
-        res = talk_response.build_response()
+        if faq is None:
+            talk_response = TalkResponse(
+                error_message='faq not found.')
+            res = talk_response.build_error_message()
+            return jsonify(res), 404
+        else:
+            # 返信
+            talk_response = TalkResponse(faq, faq.get_enable_related_faqs())
+            res = talk_response.build_response()
 
     elif request.json['type'] == 'staticAnswer':
         # static_query をもとに返信用データ作成
         name = request.json['name']
         static_answer = bot.get_static_answer(name)
 
-        # 返信
-        talk_response = TalkResponse(static_answer, static_answer.related_faqs)
-        res = talk_response.build_response()
+        if static_answer.enable_flag is False:
+            talk_response = TalkResponse(
+                error_message='static answer not found.')
+            res = talk_response.build_error_message()
+            return jsonify(res), 404
+        else:
+            # 返信
+            talk_response = TalkResponse(
+                static_answer, static_answer.get_enable_related_faqs())
+            res = talk_response.build_response()
 
     else:
         return jsonify({'error': 'type error'})
