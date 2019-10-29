@@ -147,26 +147,40 @@
     },
     delimiters: ["[[", "]]"],
     methods: {
+      requestTalkApi: function (params) {
+        return axios.post('/api/talk', params).then(res => {
+          this.addBotRemark(res.data);
+        }).catch(e => {
+          data = {
+            components: {
+              answer: {
+                answer: 'エラーが発生しました。'
+              }
+            }
+          }
+          this.addBotRemark(data);
+
+          return Promise.reject(e)
+
+        });
+
+      },
       sendQuestion: function (question) {
         this.addUserRemark(question.question)
 
-        axios.post('/api/talk', {
+        this.requestTalkApi({
           site_id: this.config.site_id,
           type: 'question',
           faq_id: question.faq_id
-        }).then(res => {
-          this.addBotRemark(res.data);
         });
       },
       sendStaticAnswer: function (staticAnswer) {
         this.addUserRemark(staticAnswer.displayText);
 
-        axios.post('/api/talk', {
+        this.requestTalkApi({
           site_id: this.config.site_id,
           type: 'staticAnswer',
           name: staticAnswer.name
-        }).then(res => {
-          this.addBotRemark(res.data);
         });
 
       },
@@ -177,12 +191,10 @@
 
         this.addUserRemark(text);
 
-        axios.post('/api/talk', {
+        this.requestTalkApi({
           site_id: this.config.site_id,
           type: 'freeText',
           query: text
-        }).then(res => {
-          this.addBotRemark(res.data);
         });
 
       },
