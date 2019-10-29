@@ -1,12 +1,15 @@
-from chatbot.common.Talk import parse, get_ml_vars, get_ml_model, create_input
 import numpy as np
-
+from flask import request
 from chatbot.common.Debug import flush
+from chatbot.common.Talk import parse, get_ml_vars, get_ml_model, create_input
+from chatbot.api.helpers.responses.Talk import TalkResponse
+from chatbot.models.TalkLog import TalkLogModel
+from chatbot.api.domain.repositories.TalkLogReposiroty import ITalkLogRepository
 
 
 class TalkService:
-    def __init__(self):
-        pass
+    def __init__(self, talk_log_repository: ITalkLogRepository):
+        self.talk_log_repository = talk_log_repository
 
     def think(
             self,
@@ -64,3 +67,16 @@ class TalkService:
 
             flush('no {}: index: {} score: {:5.2f}'.format(
                 no + 1, i, (result[i] * 100)))
+
+    def add_talk_log(
+            self,
+            request: request,
+            response: TalkResponse,
+            bot_id: int,
+            session_id: str):
+        talk_log = TalkLogModel(
+            request=request,
+            response=response,
+            bot_id=bot_id,
+            session_id=session_id)
+        return self.talk_log_repository.add(talk_log)

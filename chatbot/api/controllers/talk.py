@@ -1,14 +1,16 @@
+import uuid
 from flask import (
-    Blueprint, request, jsonify
+    Blueprint, request, jsonify, session
 )
 
 from chatbot.api.domain.repositories.FaqRepository import IFaqRepository
 from chatbot.api.domain.services.FaqService import FaqService
 from chatbot.api.domain.repositories.SiteRepository import ISiteRepository
 from chatbot.api.domain.services.SiteService import SiteService
-from chatbot.api.domain.services.TalkService import TalkService
 from chatbot.api.domain.repositories.BotRepository import IBotRepository
 from chatbot.api.domain.services.BotService import BotService
+from chatbot.api.domain.repositories.TalkLogReposiroty import ITalkLogRepository
+from chatbot.api.domain.services.TalkService import TalkService
 
 from chatbot.api.helpers.responses.Talk import TalkResponse
 
@@ -21,10 +23,19 @@ bp = Blueprint('api/talk', __name__, url_prefix='/api/talk')
 @bp.route('', methods=('POST',))
 def talk(faq_repository: IFaqRepository,
          site_repository: ISiteRepository,
-         bot_repository: IBotRepository):
+         bot_repository: IBotRepository,
+         talk_log_repository: ITalkLogRepository):
     status_code = 200
     res = {}
     error_message = ''
+    bot_id = None
+    talk_response = None
+
+    if 'session_id' not in session:
+        session['session_id'] = uuid.uuid4()
+
+    flush('session_id is {}'.format(session['session_id']))
+    talk_service = TalkService(talk_log_repository)
 
     try:
         # 応答に必要な共通変数の準備
@@ -43,13 +54,13 @@ def talk(faq_repository: IFaqRepository,
             raise NotFoundException('bot not found.')
 
         faq_service = FaqService(faq_repository)
+        bot_id = bot.id
 
         if request.json['type'] == 'freeText':
 
             # 入力をもとに返信すべきfaq_idを決定
             query = request.json['query']
 
-            talk_service = TalkService()
             faq_id, top_faq_ids = talk_service.think(
                 bot_id=bot.id, query=query)
 
@@ -109,10 +120,18 @@ def talk(faq_repository: IFaqRepository,
         res = {'error': 'not found.'}
         status_code = 404
         error_message = e.__str__()
+        talk_response = TalkResponse(error_message=error_message)
     except BaseException as e:
         res = {'error': 'internal server error.'}
         status_code = 500
         error_message = e.__str__()
+        talk_response = TalkResponse(error_message=error_message)
 
-    # flush('error_message : {}'.format(error_message))
+    # log 出力
+    talk_service.add_talk_log(
+        request=request,
+        response=talk_response,
+        bot_id=bot_id,
+        session_id=str(session['session_id']))
+
     return jsonify(res), status_code

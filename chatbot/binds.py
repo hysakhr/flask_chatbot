@@ -23,6 +23,8 @@ from chatbot.api.domain.repositories.SiteRepository import ISiteRepository as IS
 from chatbot.api.infrastructure.SiteRepositoryImpl import SiteRepositoryImpl as SiteRepositoryImpl_api
 from chatbot.api.domain.repositories.BotRepository import IBotRepository as IBotRepository_api
 from chatbot.api.infrastructure.BotRepositoryImpl import BotRepositoryImpl as BotRepositoryImpl_api
+from chatbot.api.domain.repositories.TalkLogReposiroty import ITalkLogRepository as ITalkLogRepository_api
+from chatbot.api.infrastructure.TalkLogRepositoryImpl import TalkLogRepositoryImpl as TalkLogRepositoryImpl_api
 
 
 def configure(binder):
@@ -40,3 +42,7 @@ def configure(binder):
     binder.bind(IFaqRepository_api, to=FaqRepositoryImpl_api, scope=request)
     binder.bind(ISiteRepository_api, to=SiteRepositoryImpl_api, scope=request)
     binder.bind(IBotRepository_api, to=BotRepositoryImpl_api, scope=request)
+    binder.bind(
+        ITalkLogRepository_api,
+        TalkLogRepositoryImpl_api,
+        scope=request)
