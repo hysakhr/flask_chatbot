@@ -19,10 +19,6 @@ def routes_setting(app: Flask):
     #############################
     # admin
     #############################
-    from chatbot.admin.controllers import auth
-    app.register_blueprint(auth.bp)
-    app.add_url_rule('/admin/auth', endpoint='admin/auth')
-
     # dash board
     from chatbot.admin.controllers import index as admin
     app.register_blueprint(admin.bp)
