@@ -1,3 +1,4 @@
+from flask import current_app
 
 
 class TalkResponse():
@@ -20,6 +21,10 @@ class TalkResponse():
                 'faq_id': self.answer.id,
                 'answer': self.answer.answer
             }
+
+            if current_app.config['ENV'] != 'production':
+                answer['answer'] = 'faq_id: {}<br>question: {}<br>{}'.format(
+                    self.answer.id, self.answer.question, self.answer.answer)
 
             components['answer'] = answer
 
