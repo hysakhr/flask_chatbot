@@ -30,6 +30,7 @@ def talk(faq_repository: IFaqRepository,
     error_message = ''
     bot_id = None
     talk_response = None
+    top_faq_info_list = None
 
     if 'session_id' not in session:
         session['session_id'] = uuid.uuid4()
@@ -61,7 +62,7 @@ def talk(faq_repository: IFaqRepository,
             # 入力をもとに返信すべきfaq_idを決定
             query = request.json['query']
 
-            faq_id, top_faq_ids = talk_service.think(
+            faq_id, top_faq_ids, top_faq_info_list = talk_service.think(
                 bot_id=bot.id, query=query)
 
             # faq_id をもとに返信用データ作成
@@ -131,6 +132,7 @@ def talk(faq_repository: IFaqRepository,
     talk_service.add_talk_log(
         request=request,
         response=talk_response,
+        top_faq_info_list=top_faq_info_list,
         bot_id=bot_id,
         session_id=str(session['session_id']))
 

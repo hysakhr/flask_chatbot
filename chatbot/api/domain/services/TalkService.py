@@ -27,26 +27,32 @@ class TalkService:
         input = np.array([input])
 
         result = model.predict(input)[0]
-        index = int(np.argmax(result))
+        # index = int(np.argmax(result)) # topのみ取得する場合
         rank = np.argsort(-result)
 
-        top = []
         top_faq_ids = []
+        top_faq_info_list = []
         for i in range(top_count):
-            b = int(rank[i])
-            faq = vars['faq_info_list'][b]
-            faq['score'] = float(result[b])
-            top.append(faq)
-            top_faq_ids.append(faq['faq_id'])
+            target_index = int(rank[i])
+            faq_info = vars['faq_info_list'][target_index]
+            faq_info['score'] = float(result[target_index])
 
-        # self.dump(vars, info, word_set, input, result, rank, top)
+            top_faq_ids.append(faq_info['faq_id'])
+            top_faq_info_list.append(faq_info)
 
-        # flush(top[0]['score'])
-        # flush(threshold)
-        if top[0]['score'] > threshold:
-            return vars['faq_info_list'][index]['faq_id'], None
+        # self.dump(
+        #     vars,
+        #     info,
+        #     word_set,
+        #     input,
+        #     result,
+        #     rank,
+        #     top_faq_info_list[0])
+
+        if top_faq_info_list[0]['score'] > threshold:
+            return top_faq_info_list[0]['faq_id'], None, top_faq_info_list
         else:
-            return None, top_faq_ids
+            return None, top_faq_ids, top_faq_info_list
 
     def dump(self, vars, info, word_set, input, result, rank, top):
         flush('info : {}'.format(info))
@@ -72,11 +78,13 @@ class TalkService:
             self,
             request: request,
             response: TalkResponse,
+            top_faq_info_list: list,
             bot_id: int,
             session_id: str):
         talk_log = TalkLogModel(
             request=request,
             response=response,
+            top_faq_info_list=top_faq_info_list,
             bot_id=bot_id,
             session_id=session_id)
         return self.talk_log_repository.add(talk_log)
