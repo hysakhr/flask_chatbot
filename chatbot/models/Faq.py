@@ -35,6 +35,7 @@ class FaqModel(db.Model):
         db.ForeignKey('faq_lists.id'),
         nullable=False)
     enable_flag = db.Column(db.Boolean, nullable=False, default=True)
+    fit_flag = db.Column(db.Boolean, nullable=False, default=True)
     created_at = db.Column(db.DateTime, nullable=False, default=datetime.now)
     updated_at = db.Column(
         db.DateTime,
@@ -59,13 +60,15 @@ class FaqModel(db.Model):
             question_org,
             answer_org,
             faq_list_id,
-            enable_flag=True):
+            enable_flag=True,
+            fit_flag=True):
         self.question = question
         self.answer = answer
         self.question_org = question_org
         self.answer_org = answer_org
         self.faq_list_id = faq_list_id
         self.enable_flag = enable_flag
+        self.fit_flag = fit_flag
 
     @reconstructor
     def init_on_load(self):
@@ -74,6 +77,12 @@ class FaqModel(db.Model):
             self.enable_label = '有効'
         else:
             self.enable_label = '無効'
+
+        # 学習対象のラベル
+        if self.fit_flag:
+            self.fit_label = '対象'
+        else:
+            self.fit_label = '非対象'
 
     def get_enable_related_faqs(self):
         return [faq for faq in self.related_faqs if faq.enable_flag]

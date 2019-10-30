@@ -60,6 +60,7 @@ def add(
         faq.answer = request.form['answer']
         faq.question = request.form['question']
         faq.enable_flag = 'enable_flag' in request.form and request.form['enable_flag'] == 'true'
+        faq.fit_flag = 'fit_flag' in request.form and request.form['fit_flag'] == 'true'
         faq.related_faqs = []
 
         # 関連FAQを取得し設定
@@ -104,6 +105,7 @@ def edit(
         faq.answer = request.form['answer']
         faq.question = request.form['question']
         faq.enable_flag = 'enable_flag' in request.form and request.form['enable_flag'] == 'true'
+        faq.fit_flag = 'fit_flag' in request.form and request.form['fit_flag'] == 'true'
         faq.related_faqs = []
 
         # 関連FAQを取得し設定

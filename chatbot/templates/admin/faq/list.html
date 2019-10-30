@@ -26,6 +26,7 @@
             <th>質問</th>
             <th>作成日時</th>
             <th>更新日時</th>
+            <th>学習対象</th>
             <th>操作</th>
             <th>有効 / 無効</th>
           </tr>
@@ -37,6 +38,7 @@
             <td>{{ faq.question }}</td>
             <td>{{ faq.created_at }}</td>
             <td>{{ faq.updated_at }}</td>
+            <td>{{ faq.fit_label }}</td>
             <td>
               <a href="{{ url_for('admin/faq.edit', id=faq.id) }}">
                 <div class="btn btn-block btn-default">編集</div>

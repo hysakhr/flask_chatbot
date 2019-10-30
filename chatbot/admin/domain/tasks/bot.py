@@ -1,16 +1,13 @@
 from chatbot import celery
-import MeCab
 from flask import current_app
 
 from chatbot.models.Bot import BotModel, FITTED_STATE_FITTING, FITTED_STATE_FITTED
-from chatbot.models.FaqList import FaqListModel
+from chatbot.models.Faq import FaqModel
 from chatbot.database import db
 
 import tensorflow as tf
 import numpy as np
 import math
-import pickle
-import os
 from datetime import datetime
 
 from chatbot.common.Talk import (
@@ -27,13 +24,17 @@ def fit(bot_id: int, faq_list_id: int, epochs: int = 400):
     # タスクの引数には、独自クラスのインスタンスが設定できないので
     # DB操作をここに記述
     bot = db.session.query(BotModel).get(bot_id)
-    faq_list = db.session.query(FaqListModel).get(faq_list_id)
+    # faq_list = db.session.query(FaqListModel).get(faq_list_id)
+    faqs = db.session.query(FaqModel).filter(
+        FaqModel.faq_list_id == faq_list_id).filter(
+        FaqModel.enable_flag).filter(
+            FaqModel.fit_flag).all()
 
     # 学習データの準備
     faq_info_list = []
     preparation_datas = []
     words = set()
-    for label, faq in enumerate(faq_list.faqs):
+    for label, faq in enumerate(faqs):
         # 質問の文言をそのまま利用する学習データを追加
         info, word_set = parse(faq.question)
         faq_info_list.append({
@@ -93,7 +94,7 @@ def fit(bot_id: int, faq_list_id: int, epochs: int = 400):
 
     word_count = len(words)
     middle_layers = [math.floor(word_count * 0.2)]
-    output_layer = len(faq_list.faqs)
+    output_layer = len(faqs)
 
     # 学習データ作成
     data = {
