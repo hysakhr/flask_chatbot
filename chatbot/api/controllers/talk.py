@@ -35,7 +35,6 @@ def talk(faq_repository: IFaqRepository,
     if 'session_id' not in session:
         session['session_id'] = uuid.uuid4()
 
-    flush('session_id is {}'.format(session['session_id']))
     talk_service = TalkService(talk_log_repository)
 
     try:
