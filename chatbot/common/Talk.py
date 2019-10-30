@@ -33,7 +33,8 @@ def parse(text: str):
 
         info = {
             'surface': node.surface,
-            'feature': node.feature,
+            'feature_str': node.feature,
+            'features': features,
             'words': words
         }
         ret.append(info)
@@ -94,3 +95,8 @@ def save_ml_model(bot_id: int, model):
 def get_ml_model(bot_id: int):
     bot_model_path = get_bot_model_path(bot_id)
     return tf.keras.models.load_model(bot_model_path)
+
+
+def kata_to_hira(strj):
+    return "".join(
+        [chr(ord(ch) - 96) if ("ァ" <= ch <= "ヴ") else ch for ch in strj])
