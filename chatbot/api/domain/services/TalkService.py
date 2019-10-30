@@ -16,7 +16,7 @@ class TalkService:
             bot_id: int,
             query: str,
             top_count: int = 5,
-            threshold: float = 0.3):
+            threshold: float = 0.5):
 
         # 変数の読み込み
         vars = get_ml_vars(bot_id)

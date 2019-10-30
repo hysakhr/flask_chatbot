@@ -31,6 +31,7 @@ def fit(bot_id: int, faq_list_id: int, epochs: int = 400):
 
     # 学習データの準備
     faq_info_list = []
+    preparation_datas = []
     words = set()
     for label, faq in enumerate(faq_list.faqs):
         # 質問の文言をそのまま利用する学習データを追加
@@ -39,6 +40,10 @@ def fit(bot_id: int, faq_list_id: int, epochs: int = 400):
             'faq_id': faq.id,
             'question': faq.question,
             'info': info,
+            'word_set': word_set,
+            'label': label
+        })
+        preparation_datas.append({
             'word_set': word_set,
             'label': label
         })
@@ -59,10 +64,7 @@ def fit(bot_id: int, faq_list_id: int, epochs: int = 400):
                 yomi_info, yomi_word_set = parse(yomi_hira)
 
         word_set_hira = set(words_hira)
-        faq_info_list.append({
-            'faq_id': faq.id,
-            'question': faq.question,
-            'info': info,
+        preparation_datas.append({
             'word_set': word_set_hira,
             'label': label
         })
@@ -77,10 +79,7 @@ def fit(bot_id: int, faq_list_id: int, epochs: int = 400):
                     words_hira.append(word)
 
         word_set_hira = set(words_hira)
-        faq_info_list.append({
-            'faq_id': faq.id,
-            'question': faq.question,
-            'info': info,
+        preparation_datas.append({
             'word_set': word_set_hira,
             'label': label
         })
@@ -93,9 +92,7 @@ def fit(bot_id: int, faq_list_id: int, epochs: int = 400):
         word_to_id[word] = word_id
 
     word_count = len(words)
-    middle_layers = [
-        math.floor(word_count * 0.5),
-        math.floor(word_count * 0.3)]
+    middle_layers = [math.floor(word_count * 0.2)]
     output_layer = len(faq_list.faqs)
 
     # 学習データ作成
@@ -103,11 +100,11 @@ def fit(bot_id: int, faq_list_id: int, epochs: int = 400):
         'inputs': [],
         'labels': []
     }
-    for faq_info in faq_info_list:
+    for preparation_data in preparation_datas:
         input = create_input(
             word_to_id=word_to_id,
-            word_set=faq_info['word_set'])
-        label = [faq_info['label']]
+            word_set=preparation_data['word_set'])
+        label = [preparation_data['label']]
 
         data['inputs'].append(input)
         data['labels'].append(label)
@@ -118,8 +115,6 @@ def fit(bot_id: int, faq_list_id: int, epochs: int = 400):
     # model 作成
     model = tf.keras.models.Sequential([
         tf.keras.layers.Dense(middle_layers[0], input_dim=word_count),
-        tf.keras.layers.Activation('tanh'),
-        tf.keras.layers.Dense(middle_layers[1]),
         tf.keras.layers.Activation('tanh'),
         tf.keras.layers.Dense(output_layer, activation='softmax')
     ])
