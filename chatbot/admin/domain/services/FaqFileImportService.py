@@ -38,12 +38,16 @@ class FaqFileImportService:
                 for line in reader:
                     question = line[0]
                     answer = line[1]
+                    enable_flag = line[2] == '1'
+                    fit_flag = line[3] == '1'
                     faq = FaqModel(
                         question=question,
                         question_org=question,
                         answer=answer,
                         answer_org=answer,
-                        faq_list_id=faq_list.id)
+                        faq_list_id=faq_list.id,
+                        enable_flag=enable_flag,
+                        fit_flag=fit_flag)
                     self.faq_repository.save(faq)
         except BaseException as e:
             session.rollback()
