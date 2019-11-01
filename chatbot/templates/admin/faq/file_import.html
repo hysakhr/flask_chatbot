@@ -1,6 +1,12 @@
 {% extends 'admin/layout.html' %}
 
-{% block title %}FAQファイルインポート{% endblock %}
+{% block title %}FAQファイルからインポート{% endblock %}
+
+{% block breadcrumb %}
+<li><a href="{{ url_for('admin/bot') }}">Bot一覧</a></li>
+<li><a href="{{ url_for('admin/bot.detail', id=faq_file_import.bot.id) }}">Bot詳細</a></li>
+<li class="active">{{ self.title() }}</li>
+{% endblock %}
 
 {% block content %}
 

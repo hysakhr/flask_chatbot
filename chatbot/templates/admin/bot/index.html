@@ -1,6 +1,10 @@
 {% extends 'admin/layout.html' %}
 
-{% block title %}BOT一覧{% endblock %}
+{% block title %}Bot一覧{% endblock %}
+
+{% block breadcrumb %}
+<li class="active">{{ self.title() }}</li>
+{% endblock %}
 
 {% block content %}
 <div class="col-xs-12">
@@ -11,7 +15,7 @@
         </div>
         <div class="col-xs-3">
           <a href="{{ url_for('admin/bot.add') }}">
-            <div class="btn btn-block btn-primary">BOT追加</div>
+            <div class="btn btn-block btn-primary">Bot追加</div>
           </a>
         </div>
       </div>
@@ -22,7 +26,7 @@
         <thead>
           <tr>
             <th>ID</th>
-            <th>BOT名</th>
+            <th>Bot名</th>
             <th>学習対象</th>
             <th>作成日時</th>
             <th>更新日時</th>

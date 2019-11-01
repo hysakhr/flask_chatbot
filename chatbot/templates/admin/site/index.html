@@ -2,6 +2,10 @@
 
 {% block title %}サイトの設定{% endblock %}
 
+{% block breadcrumb %}
+<li class="active">{{ self.title() }}</li>
+{% endblock %}
+
 {% block content %}
 <div class="col-xs-12">
   <div class="box">

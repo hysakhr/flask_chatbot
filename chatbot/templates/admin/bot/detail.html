@@ -2,6 +2,11 @@
 
 {% block title %}Bot詳細{% endblock %}
 
+{% block breadcrumb %}
+<li><a href="{{ url_for('admin/bot') }}">Bot一覧</a></li>
+<li class="active">{{ self.title() }}</li>
+{% endblock %}
+
 {% block content %}
 
 <div class="col-xs-12">
@@ -51,7 +56,7 @@
         </div>
         <div class="col-xs-3">
           <a href="{{ url_for('admin/bot.file_upload', id=bot.id) }}">
-            <div class="btn btn-block btn-primary">ファイルアップロード</div>
+            <div class="btn btn-block btn-primary">ファイルからインポート</div>
           </a>
         </div>
       </div>

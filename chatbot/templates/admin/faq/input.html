@@ -2,6 +2,13 @@
 
 {% block title %}FAQの{{ operation }}{% endblock %}
 
+{% block breadcrumb %}
+<li><a href="{{ url_for('admin/bot') }}">Bot一覧</a></li>
+<li><a href="{{ url_for('admin/bot.detail', id=faq_list.bot.id) }}">Bot詳細</a></li>
+<li><a href="{{ url_for('admin/faq.list', faq_list_id=faq_list.id) }}">FAQ一覧</a></li>
+<li class="active">{{ self.title() }}</li>
+{% endblock %}
+
 {% block content %}
 
 <div class="col-md-12">

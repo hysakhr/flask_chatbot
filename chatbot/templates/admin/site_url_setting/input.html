@@ -1,6 +1,11 @@
 {% extends 'admin/layout.html' %}
 
-{% block title %}サイトの{{ operation }}{% endblock %}
+{% block title %}URLごとの設定{{ operation }}{% endblock %}
+
+{% block breadcrumb %}
+<li><a href="{{ url_for('admin/site') }}">サイトの設定</a></li>
+<li class="active">{{ self.title() }}</li>
+{% endblock %}
 
 {% block content %}
 

@@ -1,6 +1,14 @@
 {% extends 'admin/layout.html' %}
 
-{% block title %}BOTの{{ operation }}{% endblock %}
+{% block title %}Botの{{ operation }}{% endblock %}
+
+{% block breadcrumb %}
+<li><a href="{{ url_for('admin/bot') }}">Bot一覧</a></li>
+{% if bot.id %}
+<li><a href="{{ url_for('admin/bot.detail', id=bot.id) }}">Bot詳細</a></li>
+{% endif %}
+<li class="active">{{ self.title() }}</li>
+{% endblock %}
 
 {% block content %}
 
@@ -16,7 +24,7 @@
       {{ form.hidden_tag() }}
       <div class="box-body">
         <div class="form-group">
-          <label for="name" class="col-sm-2 control-label">BOT名</label>
+          <label for="name" class="col-sm-2 control-label">Bot名</label>
 
           <div class="col-sm-10">
             <input type="text" name="name" class="form-control" id="name" placeholder="質問" value="{{ bot['name'] }}"
