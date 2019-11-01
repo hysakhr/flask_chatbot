@@ -10,7 +10,7 @@ class SiteModel(db.Model):
 
     id = db.Column(db.Integer, primary_key=True)
     name = db.Column(db.Text, nullable=False)
-    enable_flag = db.Column(db.Boolean, nullable=False, default=False)
+    enable_flag = db.Column(db.Boolean, nullable=False, default=True)
     created_at = db.Column(db.DateTime, nullable=False, default=datetime.now)
     updated_at = db.Column(
         db.DateTime,
@@ -20,9 +20,9 @@ class SiteModel(db.Model):
 
     url_settings = relationship('SiteUrlSettingModel', back_populates='site')
 
-    def __init__(self):
+    def __init__(self, enable_flag: bool = True):
         self.name = ''
-        self.enable_flag = False
+        self.enable_flag = enable_flag
 
     @reconstructor
     def init_on_load(self):

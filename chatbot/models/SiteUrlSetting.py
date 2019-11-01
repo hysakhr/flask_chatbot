@@ -15,7 +15,7 @@ class SiteUrlSettingModel(db.Model):
     url_pattern = db.Column(db.Text, nullable=False)
     site_id = db.Column(db.Integer, db.ForeignKey('sites.id'), nullable=False)
     bot_id = db.Column(db.Integer, db.ForeignKey('bots.id'), nullable=True)
-    enable_flag = db.Column(db.Boolean, nullable=False, default=False)
+    enable_flag = db.Column(db.Boolean, nullable=False, default=True)
     created_at = db.Column(db.DateTime, nullable=False, default=datetime.now)
     updated_at = db.Column(
         db.DateTime,
@@ -26,10 +26,10 @@ class SiteUrlSettingModel(db.Model):
     site = relationship('SiteModel', back_populates='url_settings')
     bot = relationship('BotModel')
 
-    def __init__(self, site_id: int):
+    def __init__(self, site_id: int, enable_flag: bool = True):
         self.site_id = site_id
         self.url_pattern = ''
-        self.enable_flag = False
+        self.enable_flag = enable_flag
 
     @reconstructor
     def init_on_load(self):

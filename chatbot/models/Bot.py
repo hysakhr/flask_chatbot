@@ -33,7 +33,7 @@ class BotModel(db.Model):
         nullable=False,
         default=FITTED_STATE_NO_FIT)
     last_fitted_at = db.Column(db.DateTime, nullable=True)
-    enable_flag = db.Column(db.Boolean, nullable=False, default=False)
+    enable_flag = db.Column(db.Boolean, nullable=False, default=True)
 
     fitted_faq_list = relationship(
         'FaqListModel', foreign_keys=fitted_faq_list_id)
@@ -48,7 +48,7 @@ class BotModel(db.Model):
             fitted_model_path='',
             fitted_faq_list_id=None,
             fitted_state=FITTED_STATE_NO_FIT,
-            enable_flag=False):
+            enable_flag=True):
         self.name = name
         self.fitted_model_path = fitted_model_path
         self.fitted_faq_list_id = fitted_faq_list_id
