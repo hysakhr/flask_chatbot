@@ -24,17 +24,22 @@
   {% for site in sites %}
   <div class="box box-default">
     <div class="box-header with-border">
-      <div class="col-xs-2">
+      <div class="col-xs-3">
+        <h3 class="box-title">
+          <i class="fa fa-laptop">サイトID : {{ site.id }}</i>
+        </h3>
+      </div>
+      <div class="col-xs-5">
+        <h3 class="box-title">
+          <i class="fa fa-tag">サイト名 : {{ site.name }}</i>
+        </h3>
+      </div>
+      <div class="col-xs-1">
         {% if site.enable_flag %}
         <div> 有効</div>
         {% else %}
         <div> 無効</div>
         {% endif %}
-      </div>
-      <div class="col-xs-7">
-        <h3 class="box-title">
-          <i class="fa fa-tag">サイト名 : {{ site.name }}</i>
-        </h3>
       </div>
       <div class="col-xs-3">
         <a href="{{ url_for('admin/site.edit', id=site.id) }}">
