@@ -40,6 +40,7 @@ def talk(faq_repository: IFaqRepository,
     try:
         # 応答に必要な共通変数の準備
         site_id = request.json['site_id']
+        show_faq_info = 'show_faq_info' in request.json and request.json['show_faq_info']
         site_service = SiteService(site_repository)
         url_setting = site_service.find_url_setting(
             site_id=site_id, url=request.url)
@@ -70,7 +71,8 @@ def talk(faq_repository: IFaqRepository,
                 faq = faq_service.find_by_id(faq_id)
 
                 # 返信
-                talk_response = TalkResponse(faq, faq.related_faqs)
+                talk_response = TalkResponse(
+                    faq, faq.related_faqs, show_faq_info=show_faq_info)
                 res = talk_response.build_response()
             else:
                 # 候補となるFAQの取得
@@ -84,7 +86,8 @@ def talk(faq_repository: IFaqRepository,
                         'static answer not found. name: not_found')
 
                 # 返信
-                talk_response = TalkResponse(static_answer, faqs)
+                talk_response = TalkResponse(
+                    static_answer, faqs, show_faq_info=show_faq_info)
                 res = talk_response.build_response()
 
         elif request.json['type'] == 'question':
@@ -98,7 +101,7 @@ def talk(faq_repository: IFaqRepository,
             else:
                 # 返信
                 talk_response = TalkResponse(
-                    faq, faq.get_enable_related_faqs())
+                    faq, faq.get_enable_related_faqs(), show_faq_info=show_faq_info)
                 res = talk_response.build_response()
 
         elif request.json['type'] == 'staticAnswer':
@@ -111,7 +114,9 @@ def talk(faq_repository: IFaqRepository,
             else:
                 # 返信
                 talk_response = TalkResponse(
-                    static_answer, static_answer.get_enable_related_faqs())
+                    static_answer,
+                    static_answer.get_enable_related_faqs(),
+                    show_faq_info=show_faq_info)
                 res = talk_response.build_response()
 
         else:

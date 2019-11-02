@@ -142,12 +142,15 @@
     data: {
       talk: [],
       config: {
-        site_id: 1
+        site_id: 1,
+        show_faq_info: true
       }
     },
     delimiters: ["[[", "]]"],
     methods: {
       requestTalkApi: function (params) {
+        params.show_faq_info = this.config.show_faq_info
+
         return axios.post('/api/talk', params).then(res => {
           this.addBotRemark(res.data);
         }).catch(e => {

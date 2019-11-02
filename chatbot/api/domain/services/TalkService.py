@@ -40,14 +40,14 @@ class TalkService:
             top_faq_ids.append(faq_info['faq_id'])
             top_faq_info_list.append(faq_info)
 
-        self.dump(
-            vars,
-            info,
-            word_set,
-            input,
-            result,
-            rank,
-            top_faq_info_list[0])
+        # self.dump(
+        #     vars,
+        #     info,
+        #     word_set,
+        #     input,
+        #     result,
+        #     rank,
+        #     top_faq_info_list[0])
 
         if top_faq_info_list[0]['score'] > threshold:
             return top_faq_info_list[0]['faq_id'], None, top_faq_info_list

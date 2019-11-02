@@ -7,11 +7,13 @@ class TalkResponse():
             answer=None,
             faqs: list = None,
             static_answers: list = None,
-            error_message: str = ''):
+            error_message: str = '',
+            show_faq_info: bool = False):
         self.answer = answer
         self.faqs = faqs
         self.static_answers = static_answers
         self.error_message = error_message
+        self.show_faq_info = show_faq_info
 
     def build_response(self):
         components = {}
@@ -22,8 +24,8 @@ class TalkResponse():
                 'answer': self.answer.answer
             }
 
-            if current_app.config['ENV'] != 'production':
-                answer['answer'] = 'faq_id: {}<br>question: {}<br>{}'.format(
+            if self.show_faq_info:
+                answer['answer'] = 'faq_id: {}<br>question: {}<br><br>{}'.format(
                     self.answer.id, self.answer.question, self.answer.answer)
 
             components['answer'] = answer
