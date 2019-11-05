@@ -1,12 +1,10 @@
 # flask_chatbot
 
 chatbot application on local machine
+日本語での概要説明→[flaskでチャットボットのサンプルアプリ作ってみた【概要編】](https://blog.hysakhr.com/2019/11/06/flask%e3%81%a7%e3%83%81%e3%83%a3%e3%83%83%e3%83%88%e3%83%9c%e3%83%83%e3%83%88%e3%81%ae%e3%82%b5%e3%83%b3%e3%83%97%e3%83%ab%e3%82%a2%e3%83%97%e3%83%aa%e4%bd%9c%e3%81%a3%e3%81%a6%e3%81%bf%e3%81%9f/)
 
 ![screenshot_front](https://github.com/hysakhr/flask_chatbot/blob/images/images/screenshot_front.gif?raw=true)
 
-## Getting Started
-
-These instructions will get you a copy of the project up and running on your local machine for development and testing purposes. See deployment for notes on how to deploy the project on a live system.
 
 ### Prerequisites
 
@@ -35,16 +33,22 @@ http://localhost:9000/admin
 configure the following settings.
 
 1. create bot
-1. create faq list
-  upload file in tsv format.
-  refer to [sample_faq_list.tsv](sample_faq_list.tsv). **(only japanese)**
+    - screen : Bot > Bot追加
+1. create and upload faq list file in tsv format.
+    - refer to [sample_faq_list.tsv](sample_faq_list.tsv). **(only japanese)**
+    - screen : Bot > Bot詳細 > ファイルからインポート
 1. set faq_list to be used in specific situations.
-    1. when talk start
-    1. faq not found
+    - situations : when talk start, faq notfound
+    - screen : Bot > Bot詳細 > FAQリスト編集
 1. train bot
+    - screen : Bot > Bot詳細 > FAQリストの学習ボタン
+    - train processing is asynchronous.
+    - if 学習状態 is 学習中, please reload the page after a while.
 1. create site
-    1. when site is created, site default setting is created at the same time.
-    1. if you want to set for each URL, you can add it separately.
+    - screen : Site Settings > サイト追加
+1. setting bot to use on the site.
+    - when site is created, site default setting is created at the same time.
+    - if you want to set for each URL, you can add it separately.
 
 ### chatbot settings on front
 
