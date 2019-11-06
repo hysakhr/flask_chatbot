@@ -149,7 +149,6 @@
     delimiters: ["[[", "]]"],
     methods: {
       requestTalkApi: function (params) {
-        params.show_faq_info = this.config.show_faq_info
 
         return axios.post('/api/talk', params).then(res => {
           this.addBotRemark(res.data);
@@ -219,7 +218,11 @@
           }
 
           if (res.answer) {
-            botRemark.answer = res.answer.answer;
+            remark = res.answer.answer
+            if (this.config.show_faq_info) {
+              remark = `faq_id: ${res.answer.faq_id}<br>question: ${res.answer.question}<br><br>${remark}`
+            }
+            botRemark.answer = remark;
           }
 
           if (res.questionList) {
