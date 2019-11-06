@@ -155,10 +155,8 @@
           this.addBotRemark(res.data);
         }).catch(e => {
           data = {
-            components: {
-              answer: {
-                answer: 'エラーが発生しました。'
-              }
+            answer: {
+              answer: 'エラーが発生しました。'
             }
           }
           this.addBotRemark(data);
@@ -216,22 +214,20 @@
       addBotRemark: function (res) {
         setTimeout(() => {
 
-          components = res.components;
-
           botRemark = {
             who: 'bot'
           }
 
-          if (components.answer) {
-            botRemark.answer = components.answer.answer;
+          if (res.answer) {
+            botRemark.answer = res.answer.answer;
           }
 
-          if (components.questionList) {
-            botRemark.questionList = components.questionList;
+          if (res.questionList) {
+            botRemark.questionList = res.questionList;
           }
 
-          if (components.staticAnswerList) {
-            botRemark.staticAnswerList = components.staticAnswerList
+          if (res.staticAnswerList) {
+            botRemark.staticAnswerList = res.staticAnswerList
           }
 
           this.talk.push(botRemark);

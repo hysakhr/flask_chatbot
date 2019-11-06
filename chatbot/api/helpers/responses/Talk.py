@@ -21,7 +21,8 @@ class TalkResponse():
         if self.answer:
             answer = {
                 'faq_id': self.answer.id,
-                'answer': self.answer.answer
+                'answer': self.answer.answer,
+                'question': self.answer.question
             }
 
             if self.show_faq_info:
@@ -55,9 +56,7 @@ class TalkResponse():
 
             components['staticAnswerList']
 
-        return {
-            'components': components
-        }
+        return components
 
     def build_error_message(self):
         return {'error': self.error_message}
