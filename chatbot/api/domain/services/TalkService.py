@@ -33,7 +33,7 @@ class TalkService:
         top_faq_ids = []
         top_faq_info_list = []
         for i in range(top_count):
-            target_index = int(rank[i])
+            target_index = rank[i]
             faq_info = vars['faq_info_list'][target_index]
             faq_info['score'] = float(result[target_index])
 
@@ -61,6 +61,7 @@ class TalkService:
         flush('input.shape : {}'.format(input.shape))
         flush('word_to_id : {}'.format(vars['word_to_id']))
         flush('result: {}'.format(result))
+        flush('result type: {}'.format(type(result)))
         flush('argmax ; {}'.format(np.argmax(result)))
         flush('argsort ; {}'.format(np.argsort(result)))
         flush('rank : {}'.format(rank))
