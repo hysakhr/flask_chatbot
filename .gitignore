@@ -20,3 +20,7 @@ node_modules/
 
 # mysql
 db/data/
+
+
+# vscode
+*.code-workspace
