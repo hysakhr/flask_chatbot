@@ -20,7 +20,7 @@ h5py==2.10.0
 importlib-metadata==0.19
 injector==0.17.0
 itsdangerous==1.1.0
-Jinja2==2.10.1
+Jinja2==2.11.3
 Keras-Applications==1.0.8
 Keras-Preprocessing==1.1.0
 kombu==4.6.5
